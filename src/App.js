@@ -13,25 +13,28 @@ const App = () => {
   useEffect(() => {
     const newPeer = new Peer();
     newPeer.on('open', id => {
-      console.log('Connected to Signaling Server ID:', id);
       setPeerId(id);
     });
 
     newPeer.on('connection', c => {
-      setConn(c);
-      setFriendPeerId(c.peer);
-      setIsConnected(true);
-
-      c.on('data', data => {
-        printMsg(`Friend: ${data}`);
-      });
+      if (!conn) {
+        setConn(c);
+        setFriendPeerId(c.peer);
+        setIsConnected(true);
+        setupConnection(c);
+      }
     });
 
     setPeer(newPeer);
   }, []);
 
   const connectToFriend = () => {
+    if (!peer) return;
     const connection = peer.connect(friendPeerId);
+    setupConnection(connection);
+  };
+
+  const setupConnection = (connection) => {
     setConn(connection);
     connection.on('open', () => {
       setIsConnected(true);
