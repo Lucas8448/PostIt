@@ -3,45 +3,31 @@
 
 <head>
   <title>WebRTC Host</title>
+  <script src="https://cdn.jsdelivr.net/npm/peerjs@1.3.2/dist/peer.min.js"></script>
   <script>
-    let peerConnection = new RTCPeerConnection();
-    let dataChannel = peerConnection.createDataChannel("chat");
+    document.addEventListener('DOMContentLoaded', () => {
+      const peer = new Peer();
 
-    dataChannel.onopen = () => console.log("Data channel is open");
-    dataChannel.onmessage = event => console.log("Received message:", event.data);
-    dataChannel.onerror = error => console.error("Data channel error:", error);
-    dataChannel.onclose = () => console.log("Data channel closed");
+      peer.on('open', (id) => {
+        document.getElementById('peerId').textContent = `Your peer ID: ${id}`;
+      });
 
-    peerConnection.onicecandidate = event => {
-      if (event.candidate) {
-        console.log("New ICE candidate:", event.candidate);
-      }
-    };
+      peer.on('connection', (conn) => {
+        conn.on('data', (data) => {
+          console.log('Received:', data);
+        });
 
-    peerConnection.oniceconnectionstatechange = () => {
-      console.log("ICE connection state changed to:", peerConnection.iceConnectionState);
-    };
-
-    peerConnection.onconnectionstatechange = () => {
-      console.log("Connection state changed to:", peerConnection.connectionState);
-    };
-
-    peerConnection.createOffer()
-      .then(offer => peerConnection.setLocalDescription(offer))
-      .then(() => {
-        const encodedOffer = encodeURIComponent(btoa(peerConnection.localDescription.sdp));
-        const offerUrl = `${window.location.href.replace('host.html', 'client.html')}?offer=${encodedOffer}`;
-        document.getElementById("offerUrl").textContent = offerUrl;
-        document.getElementById("offerUrl").href = offerUrl;
-      })
-      .catch(error => console.error("Error creating offer:", error));
+        conn.on('open', () => {
+          conn.send('Hello from Host!');
+        });
+      });
+    });
   </script>
 </head>
 
 <body>
   <h2>WebRTC Host</h2>
-  <p>Share this URL with the client:</p>
-  <a id="offerUrl" href="#">Generating Offer URL...</a>
+  <p id="peerId">Generating peer ID...</p>
 </body>
 
 </html>
