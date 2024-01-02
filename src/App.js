@@ -1,64 +1,90 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Peer from 'peerjs';
 
 const App = () => {
-  const [peer, setPeer] = useState(null);
-  const [connection, setConnection] = useState(null);
+  const [peerId, setPeerId] = useState('');
+  const [friendPeerId, setFriendPeerId] = useState('');
   const [message, setMessage] = useState('');
   const [messages, setMessages] = useState([]);
-  const [peerId, setPeerId] = useState('');
-  const [otherPeerId, setOtherPeerId] = useState(''); // Add this line
+  const [peer, setPeer] = useState(null);
+  const [conn, setConn] = useState(null);
+  const [isConnected, setIsConnected] = useState(false);
 
   useEffect(() => {
-    const peerInstance = new Peer();
-    setPeer(peerInstance);
-
-    peerInstance.on('open', id => {
+    const newPeer = new Peer();
+    newPeer.on('open', id => {
+      console.log('Connected to Signaling Server ID:', id);
       setPeerId(id);
-      console.log('My peer ID is: ' + id);
     });
 
-    peerInstance.on('connection', conn => {
-      setConnection(conn);
+    newPeer.on('connection', c => {
+      setConn(c);
+      setFriendPeerId(c.peer);
+      setIsConnected(true);
 
-      conn.on('data', data => {
-        setMessages(prevMessages => [...prevMessages, data]);
+      c.on('data', data => {
+        printMsg(`Friend: ${data}`);
       });
     });
+
+    setPeer(newPeer);
   }, []);
 
-  const connectToPeer = (id) => {
-  if (!peer) return;
+  const connectToFriend = () => {
+    const connection = peer.connect(friendPeerId);
+    setConn(connection);
+    connection.on('open', () => {
+      setIsConnected(true);
+    });
 
-  const conn = peer.connect(id);
-  setConnection(conn);
-
-  conn.on('open', () => {
-      conn.on('data', data => {
-        setMessages(prevMessages => [...prevMessages, data]);
-      });
+    connection.on('data', data => {
+      printMsg(`Friend: ${data}`);
     });
   };
 
   const sendMessage = () => {
-    if (!connection || !message) return;
+    if (conn && conn.open) {
+      conn.send(message);
+      printMsg(`Me: ${message}`);
+      setMessage('');
+    }
+  };
 
-    connection.send(message);
-    setMessage('');
+  const printMsg = (msg) => {
+    setMessages(prevMessages => [...prevMessages, msg]);
   };
 
   return (
     <div>
-      <p>Your Peer ID: {peerId}</p>
-      <input type="text" value={message} onChange={e => setMessage(e.target.value)} />
-      <button onClick={sendMessage}>Send</button>
+      <h2>P2P Chat</h2>
+      <p>Your ID: <b>{peerId}</b></p>
+      <p>Share this ID with your friend so they can connect to you.</p>
+
+      <input 
+        type="text" 
+        value={friendPeerId} 
+        onChange={(e) => setFriendPeerId(e.target.value)} 
+        placeholder="Enter friend's ID here" 
+        disabled={isConnected}
+      />
+      <button onClick={connectToFriend} disabled={isConnected || !friendPeerId}>Connect to Friend</button><br/>
+
+      <input 
+        type="text" 
+        value={message} 
+        onChange={(e) => setMessage(e.target.value)} 
+        placeholder="Type your message here" 
+        disabled={!isConnected}
+      />
+      <button onClick={sendMessage} disabled={!isConnected || !message}>Send Message</button><br/>
+
       <ul>
-        {messages.map((msg, i) => (
-          <li key={i}>{msg}</li>
+        {messages.map((msg, index) => (
+          <li key={index}>{msg}</li>
         ))}
       </ul>
-      <input type="text" placeholder="Other Peer ID" onChange={e => setOtherPeerId(e.target.value)} />
-      <button onClick={() => connectToPeer(otherPeerId)}>Connect to Other Peer</button>
+
+      {isConnected ? <p>Connected with {friendPeerId}</p> : <p>Not connected</p>}
     </div>
   );
 };
