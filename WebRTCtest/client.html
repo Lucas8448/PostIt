@@ -15,10 +15,16 @@
       const conn = peer.connect(hostPeerId);
 
       conn.on('open', () => {
-        conn.send('Hello from Client!');
-        conn.on('data', (data) => {
-          console.log('Received:', data);
-        });
+        const msgInput = document.getElementById('msgInput');
+        const btnSend = document.getElementById('btnSend');
+        btnSend.onclick = () => {
+          conn.send(msgInput.value);
+          msgInput.value = '';
+        };
+      });
+
+      conn.on('data', (data) => {
+        console.log('Received:', data);
       });
 
       conn.on('error', err => {
@@ -32,6 +38,8 @@
   <h2>WebRTC Client</h2>
   <input type="text" id="hostPeerId" placeholder="Enter host peer ID">
   <button onclick="connectToHost()">Connect to Host</button>
+  <input type="text" id="msgInput" placeholder="Type your message here">
+  <button id="btnSend">Send</button>
 </body>
 
 </html>
