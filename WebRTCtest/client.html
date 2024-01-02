@@ -3,8 +3,12 @@
 
 <head>
   <title>WebRTC Client</title>
-  <script src="https://cdn.jsdelivr.net/npm/peerjs@1.3.2/dist/peer.min.js"></script>
-  <script>
+  <script src="https://unpkg.com/peerjs@1.5.2/dist/peerjs.min.js"></script>
+  <script type="module">
+    import {
+      Peer
+    } from "https://esm.sh/peerjs@1.5.2?bundle-deps"
+
     function connectToHost() {
       const hostPeerId = document.getElementById('hostPeerId').value;
       const peer = new Peer();
