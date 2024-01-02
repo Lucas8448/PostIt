@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>WebRTC Answer Page</title>
+  <script>
+    let peerConnection;
+
+    function connectWithOffer() {
+      const offerSDP = atob(document.getElementById("offerCode").value);
+      const offer = new RTCSessionDescription({
+        type: 'offer',
+        sdp: offerSDP
+      });
+      peerConnection = new RTCPeerConnection();
+
+      // Setup data channel event handlers
+      peerConnection.ondatachannel = event => {
+        const dataChannel = event.channel;
+        dataChannel.onopen = () => console.log("Connection opened.");
+        dataChannel.onmessage = e => displayMessage("Peer", e.data);
+      };
+
+      peerConnection.setRemoteDescription(offer)
+        .then(() => peerConnection.createAnswer())
+        .then(answer => peerConnection.setLocalDescription(answer))
+        .then(() => {
+          // Display answer as a code
+          const encodedSDP = btoa(peerConnection.localDescription.sdp);
+          document.getElementById("answerCode").textContent = encodedSDP;
+        });
+
+      peerConnection.onicecandidate = event => {
+        if (!event.candidate) {
+          console.log("Candidates finished");
+        }
+      };
+    }
+
+    function sendMessage() {
+      const message = document.getElementById("messageInput").value;
+      peerConnection.dataChannel.send(message);
+      displayMessage("You", message);
+    }
+
+    function displayMessage(sender, message) {
+      const messageBox = document.getElementById("messageBox");
+      messageBox.textContent += `${sender}: ${message}\n`;
+    }
+  </script>
+</head>
+
+<body>
+  <h2>WebRTC Answer Page</h2>
+  <input type="text" id="offerCode" placeholder="Enter Offer Code">
+  <button onclick="connectWithOffer()">Connect with Offer</button>
+  <p>Answer Code: <span id="answerCode"></span></p>
+  <br><br>
+  <textarea id="messageBox" rows="6" cols="30" readonly></textarea><br>
+  <input type="text" id="messageInput" placeholder="Type a message">
+  <button onclick="sendMessage()">Send</button>
+</body>
+
+</html>

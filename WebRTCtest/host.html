@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>WebRTC Offer Page</title>
+  <script>
+    let peerConnection;
+    let dataChannel;
+
+    function createOffer() {
+      peerConnection = new RTCPeerConnection();
+
+      // Create data channel and setup event handlers
+      dataChannel = peerConnection.createDataChannel("chat");
+      dataChannel.onopen = () => console.log("Connection opened.");
+      dataChannel.onmessage = event => displayMessage("Peer", event.data);
+
+      peerConnection.createOffer()
+        .then(offer => peerConnection.setLocalDescription(offer))
+        .then(() => {
+          // Display offer as a code
+          const encodedSDP = btoa(peerConnection.localDescription.sdp);
+          document.getElementById("offerCode").textContent = encodedSDP;
+        });
+
+      // Setup event handler for receiving the answer
+      peerConnection.onicecandidate = event => {
+        if (!event.candidate) {
+          console.log("Candidates finished");
+        }
+      };
+    }
+
+    function receiveAnswer() {
+      const answerSDP = atob(document.getElementById("answerCode").value);
+      const answer = new RTCSessionDescription({
+        type: 'answer',
+        sdp: answerSDP
+      });
+      peerConnection.setRemoteDescription(answer);
+    }
+
+    function sendMessage() {
+      const message = document.getElementById("messageInput").value;
+      dataChannel.send(message);
+      displayMessage("You", message);
+    }
+
+    function displayMessage(sender, message) {
+      const messageBox = document.getElementById("messageBox");
+      messageBox.textContent += `${sender}: ${message}\n`;
+    }
+  </script>
+</head>
+
+<body>
+  <h2>WebRTC Offer Page</h2>
+  <button onclick="createOffer()">Create Offer</button>
+  <p>Offer Code: <span id="offerCode"></span></p>
+  <input type="text" id="answerCode" placeholder="Enter Answer Code">
+  <button onclick="receiveAnswer()">Connect with Answer</button>
+  <br><br>
+  <textarea id="messageBox" rows="6" cols="30" readonly></textarea><br>
+  <input type="text" id="messageInput" placeholder="Type a message">
+  <button onclick="sendMessage()">Send</button>
+</body>
+
+</html>
