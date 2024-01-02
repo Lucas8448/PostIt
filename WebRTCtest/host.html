@@ -8,30 +8,30 @@
     import { Peer } from "https://esm.sh/peerjs@1.5.2?bundle-deps"
 
  document.addEventListener('DOMContentLoaded', () => {
-   const peer = new Peer();
+  const peer = new Peer({ iceTransportPolicy: 'relay' });
 
-   peer.on('open', (id) => {
-     document.getElementById('peerId').textContent = `Your peer ID: ${id}`;
-   });
+  peer.on('open', (id) => {
+    document.getElementById('peerId').textContent = `Your peer ID: ${id}`;
+  });
 
-   peer.on('connection', (conn) => {
-     conn.on('data', (data) => {
-       console.log('Received:', data);
-     });
+  peer.on('connection', (conn) => {
+    conn.on('data', (data) => {
+      console.log('Received:', data);
+    });
 
-     conn.on('open', () => {
-       const msgInput = document.getElementById('msgInput');
-       const btnSend = document.getElementById('btnSend');
-       btnSend.onclick = () => {
-         conn.send(msgInput.value);
-         msgInput.value = '';
-       };
-     });
+    conn.on('open', () => {
+      const msgInput = document.getElementById('msgInput');
+      const btnSend = document.getElementById('btnSend');
+      btnSend.onclick = () => {
+        conn.send(msgInput.value);
+        msgInput.value = '';
+      };
+    });
 
-     conn.on('error', err => {
-       console.log('Error:', err);
-     });
-   });
+    conn.on('error', err => {
+      console.log('Error:', err);
+    });
+  });
  });
  </script>
 </head>

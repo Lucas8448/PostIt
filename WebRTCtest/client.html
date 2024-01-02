@@ -10,7 +10,9 @@
   <script>
     async function connectToHost() {
       const hostPeerId = document.getElementById('hostPeerId').value;
-      const peer = new Peer();
+      const peer = new Peer({
+        iceTransportPolicy: 'relay'
+      });
 
       const conn = peer.connect(hostPeerId);
 
