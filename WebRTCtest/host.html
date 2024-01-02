@@ -2,31 +2,45 @@
 <html>
 
 <head>
-  <title>WebRTC Offer</title>
+  <title>WebRTC Host</title>
   <script>
     let peerConnection = new RTCPeerConnection();
+    let dataChannel = peerConnection.createDataChannel("chat");
 
-    // Create a data channel
-    peerConnection.createDataChannel("chat");
+    dataChannel.onopen = () => console.log("Data channel is open");
+    dataChannel.onmessage = event => console.log("Received message:", event.data);
+    dataChannel.onerror = error => console.error("Data channel error:", error);
+    dataChannel.onclose = () => console.log("Data channel closed");
 
-    // Create the offer
+    peerConnection.onicecandidate = event => {
+      if (event.candidate) {
+        console.log("New ICE candidate:", event.candidate);
+      }
+    };
+
+    peerConnection.oniceconnectionstatechange = () => {
+      console.log("ICE connection state changed to:", peerConnection.iceConnectionState);
+    };
+
+    peerConnection.onconnectionstatechange = () => {
+      console.log("Connection state changed to:", peerConnection.connectionState);
+    };
+
     peerConnection.createOffer()
       .then(offer => peerConnection.setLocalDescription(offer))
       .then(() => {
-        // Encode the offer into a URL
         const encodedOffer = encodeURIComponent(btoa(peerConnection.localDescription.sdp));
-        const offerUrl = `${window.location.href.replace('offer.html', 'answer.html')}?offer=${encodedOffer}`;
+        const offerUrl = `${window.location.href.replace('host.html', 'client.html')}?offer=${encodedOffer}`;
         document.getElementById("offerUrl").textContent = offerUrl;
         document.getElementById("offerUrl").href = offerUrl;
-      });
-
-    // Add any additional event handlers as needed for the peer connection
+      })
+      .catch(error => console.error("Error creating offer:", error));
   </script>
 </head>
 
 <body>
-  <h2>WebRTC Offer</h2>
-  <p>Share this URL with Client B:</p>
+  <h2>WebRTC Host</h2>
+  <p>Share this URL with the client:</p>
   <a id="offerUrl" href="#">Generating Offer URL...</a>
 </body>
 

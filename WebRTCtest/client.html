@@ -2,9 +2,31 @@
 <html>
 
 <head>
-  <title>WebRTC Answer</title>
+  <title>WebRTC Client</title>
   <script>
     let peerConnection = new RTCPeerConnection();
+
+    peerConnection.onicecandidate = event => {
+      if (event.candidate) {
+        console.log("New ICE candidate:", event.candidate);
+      }
+    };
+
+    peerConnection.oniceconnectionstatechange = () => {
+      console.log("ICE connection state changed to:", peerConnection.iceConnectionState);
+    };
+
+    peerConnection.onconnectionstatechange = () => {
+      console.log("Connection state changed to:", peerConnection.connectionState);
+    };
+
+    peerConnection.ondatachannel = event => {
+      const dataChannel = event.channel;
+      dataChannel.onopen = () => console.log("Connected to host");
+      dataChannel.onmessage = e => console.log("Message from Host:", e.data);
+      dataChannel.onerror = error => console.error("Data channel error:", error);
+      dataChannel.onclose = () => console.log("Data channel closed");
+    };
 
     window.onload = () => {
       const urlParams = new URLSearchParams(window.location.search);
@@ -14,26 +36,17 @@
         sdp: offerSdp
       });
 
-      // Set the remote description to the received offer
       peerConnection.setRemoteDescription(offerDesc)
         .then(() => peerConnection.createAnswer())
-        .then(answer => peerConnection.setLocalDescription(answer));
-
-      // Setup data channel event handlers
-      peerConnection.ondatachannel = event => {
-        const dataChannel = event.channel;
-        dataChannel.onmessage = e => console.log("Message from Client A:", e.data);
-        dataChannel.onopen = () => console.log("Connection established with Client A");
-      };
-
-      // Add any additional event handlers as needed for the peer connection
+        .then(answer => peerConnection.setLocalDescription(answer))
+        .catch(error => console.error("Error during answer creation:", error));
     };
   </script>
 </head>
 
 <body>
-  <h2>WebRTC Connection</h2>
-  <p>Establishing connection with Client A...</p>
+  <h2>WebRTC Client</h2>
+  <p>Connecting to Host...</p>
 </body>
 
 </html>
