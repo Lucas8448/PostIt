@@ -9,7 +9,7 @@
       Peer
     } from "https://esm.sh/peerjs@1.5.2?bundle-deps"
 
-    function connectToHost() {
+    async function connectToHost() {
       const hostPeerId = document.getElementById('hostPeerId').value;
       const peer = new Peer();
 
