@@ -1,93 +1,46 @@
-import React, { useState, useEffect } from 'react';
-import Peer from 'peerjs';
+import React from 'react';
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Link
+} from 'react-router-dom';
+import Host from './Host';
+import Client from './Client';
 
 const App = () => {
-  const [peerId, setPeerId] = useState('');
-  const [friendPeerId, setFriendPeerId] = useState('');
-  const [message, setMessage] = useState('');
-  const [messages, setMessages] = useState([]);
-  const [peer, setPeer] = useState(null);
-  const [conn, setConn] = useState(null);
-  const [isConnected, setIsConnected] = useState(false);
+  return (
+    <Router>
+      <div>
+        <nav>
+          <ul>
+            <li>
+              <Link to="/">Home</Link>
+            </li>
+            <li>
+              <Link to="/host">Host</Link>
+            </li>
+            <li>
+              <Link to="/client">Join</Link>
+            </li>
+          </ul>
+        </nav>
 
-  useEffect(() => {
-    const newPeer = new Peer();
-    newPeer.on('open', id => {
-      setPeerId(id);
-    });
+        <Routes>
+          <Route path="/host" element={<Host />} />
+          <Route path="/client" element={<Client />} />
+          <Route path="/" element={<Home />} />
+        </Routes>
+      </div>
+    </Router>
+  );
+};
 
-    newPeer.on('connection', c => {
-      if (!conn) {
-        setConn(c);
-        setFriendPeerId(c.peer);
-        setIsConnected(true);
-        setupConnection(c);
-      }
-    });
-
-    setPeer(newPeer);
-  }, []);
-
-  const connectToFriend = () => {
-    if (!peer) return;
-    const connection = peer.connect(friendPeerId);
-    setupConnection(connection);
-  };
-
-  const setupConnection = (connection) => {
-    setConn(connection);
-    connection.on('open', () => {
-      setIsConnected(true);
-    });
-
-    connection.on('data', data => {
-      printMsg(`Friend: ${data}`);
-    });
-  };
-
-  const sendMessage = () => {
-    if (conn && conn.open) {
-      conn.send(message);
-      printMsg(`Me: ${message}`);
-      setMessage('');
-    }
-  };
-
-  const printMsg = (msg) => {
-    setMessages(prevMessages => [...prevMessages, msg]);
-  };
-
+const Home = () => {
   return (
     <div>
-      <h2>P2P Chat</h2>
-      <p>Your ID: <b>{peerId}</b></p>
-      <p>Share this ID with your friend so they can connect to you.</p>
-
-      <input 
-        type="text" 
-        value={friendPeerId} 
-        onChange={(e) => setFriendPeerId(e.target.value)} 
-        placeholder="Enter friend's ID here" 
-        disabled={isConnected}
-      />
-      <button onClick={connectToFriend} disabled={isConnected || !friendPeerId}>Connect to Friend</button><br/>
-
-      <input 
-        type="text" 
-        value={message} 
-        onChange={(e) => setMessage(e.target.value)} 
-        placeholder="Type your message here" 
-        disabled={!isConnected}
-      />
-      <button onClick={sendMessage} disabled={!isConnected || !message}>Send Message</button><br/>
-
-      <ul>
-        {messages.map((msg, index) => (
-          <li key={index}>{msg}</li>
-        ))}
-      </ul>
-
-      {isConnected ? <p>Connected with {friendPeerId}</p> : <p>Not connected</p>}
+      <h2>Welcome to the Brainstorming App</h2>
+      <p>Select 'Host' to start a session or 'Join' to join a session.</p>
     </div>
   );
 };
