@@ -2,67 +2,32 @@
 <html>
 
 <head>
-  <title>WebRTC Offer Page</title>
+  <title>WebRTC Offer</title>
   <script>
-    let peerConnection;
-    let dataChannel;
+    let peerConnection = new RTCPeerConnection();
 
-    function createOffer() {
-      peerConnection = new RTCPeerConnection();
+    // Create a data channel
+    peerConnection.createDataChannel("chat");
 
-      // Create data channel and setup event handlers
-      dataChannel = peerConnection.createDataChannel("chat");
-      dataChannel.onopen = () => console.log("Connection opened.");
-      dataChannel.onmessage = event => displayMessage("Peer", event.data);
-
-      peerConnection.createOffer()
-        .then(offer => peerConnection.setLocalDescription(offer))
-        .then(() => {
-          // Display offer as a code
-          const encodedSDP = btoa(peerConnection.localDescription.sdp);
-          document.getElementById("offerCode").textContent = encodedSDP;
-        });
-
-      // Setup event handler for receiving the answer
-      peerConnection.onicecandidate = event => {
-        if (!event.candidate) {
-          console.log("Candidates finished");
-        }
-      };
-    }
-
-    function receiveAnswer() {
-      const answerSDP = atob(document.getElementById("answerCode").value);
-      const answer = new RTCSessionDescription({
-        type: 'answer',
-        sdp: answerSDP
+    // Create the offer
+    peerConnection.createOffer()
+      .then(offer => peerConnection.setLocalDescription(offer))
+      .then(() => {
+        // Encode the offer into a URL
+        const encodedOffer = encodeURIComponent(btoa(peerConnection.localDescription.sdp));
+        const offerUrl = `${window.location.href.replace('offer.html', 'answer.html')}?offer=${encodedOffer}`;
+        document.getElementById("offerUrl").textContent = offerUrl;
+        document.getElementById("offerUrl").href = offerUrl;
       });
-      peerConnection.setRemoteDescription(answer);
-    }
 
-    function sendMessage() {
-      const message = document.getElementById("messageInput").value;
-      dataChannel.send(message);
-      displayMessage("You", message);
-    }
-
-    function displayMessage(sender, message) {
-      const messageBox = document.getElementById("messageBox");
-      messageBox.textContent += `${sender}: ${message}\n`;
-    }
+    // Add any additional event handlers as needed for the peer connection
   </script>
 </head>
 
 <body>
-  <h2>WebRTC Offer Page</h2>
-  <button onclick="createOffer()">Create Offer</button>
-  <p>Offer Code: <span id="offerCode"></span></p>
-  <input type="text" id="answerCode" placeholder="Enter Answer Code">
-  <button onclick="receiveAnswer()">Connect with Answer</button>
-  <br><br>
-  <textarea id="messageBox" rows="6" cols="30" readonly></textarea><br>
-  <input type="text" id="messageInput" placeholder="Type a message">
-  <button onclick="sendMessage()">Send</button>
+  <h2>WebRTC Offer</h2>
+  <p>Share this URL with Client B:</p>
+  <a id="offerUrl" href="#">Generating Offer URL...</a>
 </body>
 
 </html>
