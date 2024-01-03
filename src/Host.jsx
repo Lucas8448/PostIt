@@ -3,44 +3,70 @@ import Peer from 'peerjs';
 
 const Host = () => {
   const [peerId, setPeerId] = useState('');
-  const [clients, setClients] = useState({});
+  const [peer, setPeer] = useState(null);
+  const [conn, setConn] = useState(null);
+  const [ideas, setIdeas] = useState([]);
+  const [users, setUsers] = useState([]);
+  const [message, setMessage] = useState(''); // Add this line
+
+  function generateID() {
+    let numbers = '';
+    for (let i = 0; i < 4; i++) {
+      numbers += Math.floor(Math.random() * 10);
+    }
+    return numbers;
+  }
 
   useEffect(() => {
-    const peer = new Peer();
-
-    peer.on('open', id => {
+    const newPeer = new Peer(generateID());
+    newPeer.on('open', id => {
       setPeerId(id);
-      console.log(`Host peer ID: ${id}`);
+      setPeer(newPeer);
     });
 
-    peer.on('connection', conn => {
-      conn.on('data', data => {
-        if (data.type === 'name') {
-          // Verify user name here
-          const isVerified = verifyUserName(data.name);
-          conn.send({ type: 'verification', status: isVerified });
-
-          if (isVerified) {
-            setClients(prevClients => ({ ...prevClients, [data.name]: conn }));
-          }
-        }
-      });
+    newPeer.on('connection', c => {
+      setConn(c);
+      setupConnection(c);
     });
   }, []);
 
-  const verifyUserName = (name) => {
-    // Implement your verification logic here
-    return true;  // For demonstration purposes, everyone is verified
+  const setupConnection = (connection) => {
+    setConn(connection);
+    connection.on('open', () => {
+      alert('A client has connected!');
+    });
+
+    connection.on('data', data => {
+      handleData(data)
+    });
   };
+
+  const sendData = () => {
+    if (conn && conn.open) {
+      setIdeas(prevIdeas => [...prevIdeas, message]);
+      conn.send(ideas);
+      setMessage('');
+    }
+  };
+
+  const handleData = (data) => {
+    console.log(data)
+  }
 
   return (
     <div>
       <h2>Host Panel</h2>
       <p>Host ID: {peerId}</p>
-      <p>Connected Users:</p>
+      <input
+        type="text"
+        value={message}
+        onChange={e => setMessage(e.target.value)}
+        placeholder="Type your idea here"
+      />
+      <button onClick={sendData}>Send Idea</button>
       <ul>
-        {Object.keys(clients).map(name => (
-          <li key={name}>{name}</li>
+        {ideas.map((idea, index) => (
+          <li key={index}>{idea}</li>
         ))}
       </ul>
     </div>
