@@ -6,7 +6,7 @@ body {
   max-height: 100vh;
 }
 
-.container {
+.app-container {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -15,19 +15,19 @@ body {
   font-family: 'Arial', sans-serif;
 }
 
-.container img {
+.app-container img {
   height: 300px;
   width: auto;
 }
 
-.home-container {
+.app-home-container {
   background-color: #f0f0f0;
   border-radius: 10px;
   padding: 20px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
-.link-button {
+.app-link-button {
   margin: 10px;
   padding: 10px 20px;
   text-decoration: none;
@@ -41,22 +41,22 @@ body {
   transition: background-color 0.3s, border-color 0.3s;
 }
 
-.link-button:hover {
+.app-link-button:hover {
   background-color: #0056b3;
 }
 
-.home-link {
+.app-home-link {
   border: 1px solid #007bff;
 }
 
-.sign-in-container {
+.app-sign-in-container {
   background-color: #fff;
   border-radius: 10px;
   padding: 20px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
-.google-sign-in-button {
+.app-google-sign-in-button {
   background-color: white;
   color: black;
   font-weight: bold;
@@ -71,15 +71,15 @@ body {
   transition: background-color 0.3s, box-shadow 0.3s;
 }
 
-.google-sign-in-button:hover {
+.app-google-sign-in-button:hover {
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
-.google-sign-in-button:active {
+.app-google-sign-in-button:active {
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3) inset;
 }
 
-.google-sign-in-button img {
+.app-google-sign-in-button img {
   margin-right: 10px;
   height: 20px;
   width: auto;

@@ -24,7 +24,7 @@ const Client = () => {
         console.log('Connection lost. Attempting to reconnect...');
         connectToHost();
       }
-    }, 5000); // Check every 5 seconds
+    }, 5000);
 
     return () => clearInterval(intervalId); // Cleanup on unmount
   }, [peer, conn]);
