@@ -25,7 +25,16 @@ const Host = () => {
       setConn(c);
       setupConnection(c);
     });
-  }, []);
+
+    const intervalId = setInterval(() => {
+      if (conn && !conn.open) {
+        console.log('Connection lost. Waiting for a new connection...');
+        setConn(null);
+      }
+    }, 5000); // Check every 5 seconds
+
+    return () => clearInterval(intervalId); // Cleanup on unmount
+  }, [conn]);
 
   const setupConnection = (connection) => {
     setConn(connection);
@@ -35,6 +44,11 @@ const Host = () => {
 
     connection.on('data', data => {
       handleData(data)
+    });
+
+    connection.on('error', err => {
+      console.error('Connection error:', err);
+      setConn(null);
     });
   };
 

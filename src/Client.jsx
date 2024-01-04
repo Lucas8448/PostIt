@@ -18,7 +18,16 @@ const Client = () => {
       setConn(c);
       setupConnection(c);
     });
-  }, []);
+
+    const intervalId = setInterval(() => {
+      if (conn && !conn.open) {
+        console.log('Connection lost. Attempting to reconnect...');
+        connectToHost();
+      }
+    }, 5000); // Check every 5 seconds
+
+    return () => clearInterval(intervalId); // Cleanup on unmount
+  }, [peer, conn]);
 
   const connectToHost = () => {
     if (!peer) return;
@@ -34,6 +43,11 @@ const Client = () => {
 
     connection.on('data', data => {
       setMessages(prevMessages => [...prevMessages, data.message]);
+    });
+
+    connection.on('error', err => {
+      console.error('Connection error:', err);
+      setConn(null);
     });
   };
 
