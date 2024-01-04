@@ -22,7 +22,7 @@ const Client = () => {
 
   const connectToHost = () => {
     if (!peer) return;
-    const connection = peer.connect(hostId);
+    const connection = peer.connect("PostIt" + hostId);
     setupConnection(connection);
   };
 
@@ -33,13 +33,13 @@ const Client = () => {
     });
 
     connection.on('data', data => {
-      setMessages(data); // Update messages with received ideas
+      setMessages(prevMessages => [...prevMessages, data.message]);
     });
   };
 
   const sendMessage = () => {
     if (conn && conn.open) {
-      conn.send(message); // Send the message when the button is clicked
+      conn.send({ message });
       setMessage('');
     }
   };
@@ -47,20 +47,20 @@ const Client = () => {
   return (
     <div>
       <h2>User Panel</h2>
-      <input
+      {!conn && <input
         type="text"
         value={hostId}
         onChange={e => setHostId(e.target.value)}
         placeholder="Host ID"
-      />
-      <button onClick={connectToHost}>Connect to Host</button>
-      <input
+      />}
+      {!conn && <button onClick={connectToHost}>Connect to Host</button>}
+      {conn && <input
         type="text"
         value={message}
         onChange={e => setMessage(e.target.value)}
         placeholder="Type your idea here"
-      />
-      <button onClick={sendMessage}>Send Idea</button>
+      />}
+      {conn && <button onClick={sendMessage}>Send Idea</button>}
       <ul>
         {messages.map((msg, index) => (
           <li key={index}>{msg}</li>

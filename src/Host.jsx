@@ -3,11 +3,9 @@ import Peer from 'peerjs';
 
 const Host = () => {
   const [peerId, setPeerId] = useState('');
-  const [peer, setPeer] = useState(null);
   const [conn, setConn] = useState(null);
   const [ideas, setIdeas] = useState([]);
-  const [users, setUsers] = useState([]);
-  const [message, setMessage] = useState(''); // Add this line
+  const [message, setMessage] = useState('');
 
   function generateID() {
     let numbers = '';
@@ -18,10 +16,9 @@ const Host = () => {
   }
 
   useEffect(() => {
-    const newPeer = new Peer(generateID());
+    const newPeer = new Peer("PostIt" + generateID());
     newPeer.on('open', id => {
-      setPeerId(id);
-      setPeer(newPeer);
+      setPeerId(id.slice(6));
     });
 
     newPeer.on('connection', c => {
@@ -44,14 +41,14 @@ const Host = () => {
   const sendData = () => {
     if (conn && conn.open) {
       setIdeas(prevIdeas => [...prevIdeas, message]);
-      conn.send(ideas);
+      conn.send({ message });
       setMessage('');
     }
   };
 
   const handleData = (data) => {
-    console.log(data)
-  }
+    setIdeas(prevIdeas => [...prevIdeas, data.message]);
+  };
 
   return (
     <div>

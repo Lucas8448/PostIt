@@ -1,46 +1,81 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   BrowserRouter as Router,
   Routes,
   Route,
-  Link
+  Link,
+  useNavigate
 } from 'react-router-dom';
+import { auth, googleAuthProvider } from './firebaseConfig';
+import { signInWithPopup } from "firebase/auth";
 import Host from './Host';
 import Client from './Client';
+import './App.css';
 
 const App = () => {
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged(user => {
+      if (user) {
+        setUser(user);
+      } else {
+        setUser(null);
+      }
+    });
+
+    return () => unsubscribe();
+  }, []);
+
+  const signInWithGoogle = async () => {
+    try {
+      await signInWithPopup(auth, googleAuthProvider);
+    } catch (error) {
+      console.error("Error signing in with Google", error);
+    }
+  };
+
   return (
     <Router>
-      <div>
-        <nav>
-          <ul>
-            <li>
-              <Link to="/">Home</Link>
-            </li>
-            <li>
-              <Link to="/host">Host</Link>
-            </li>
-            <li>
-              <Link to="/client">Join</Link>
-            </li>
-          </ul>
-        </nav>
-
-        <Routes>
-          <Route path="/host" element={<Host />} />
-          <Route path="/client" element={<Client />} />
-          <Route path="/" element={<Home />} />
-        </Routes>
-      </div>
+      <Routes>
+        {user ? (
+          <>
+            <Route path="/host" element={<Host />} />
+            <Route path="/client" element={<Client />} />
+            <Route path="/" element={<Home user={user} />} />
+          </>
+        ) : (
+          <Route path="/" element={<SignIn signInWithGoogle={signInWithGoogle} />} />
+        )}
+      </Routes>
     </Router>
   );
 };
 
-const Home = () => {
+const Home = ({ user }) => {
+  const navigate = useNavigate();
+
+  const signOut = () => {
+    auth.signOut().then(() => navigate('/'));
+  };
+
   return (
-    <div>
-      <h2>Welcome to the Brainstorming App</h2>
-      <p>Select 'Host' to start a session or 'Join' to join a session.</p>
+    <div className="container home-container">
+      <div>Welcome, {user.displayName}</div>
+      <Link to="/host" className="link-button home-link">Host</Link>
+      <Link to="/client" className="link-button home-link">Join</Link>
+      <button onClick={signOut} className="link-button">Sign out</button>
+    </div>
+  );
+};
+
+const SignIn = ({ signInWithGoogle }) => {
+  return (
+    <div className="container sign-in-container">
+      <button onClick={signInWithGoogle} className="link-button google-sign-in-button">
+        <img src="google.png" alt="Google logo" />
+        Sign in with Google
+      </button>
     </div>
   );
 };
