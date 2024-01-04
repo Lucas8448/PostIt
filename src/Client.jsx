@@ -22,7 +22,7 @@ const Client = () => {
 
   const connectToHost = () => {
     if (!peer) return;
-    const connection = peer.connect(hostId);
+    const connection = peer.connect("PostIt" + hostId);
     setupConnection(connection);
   };
 
