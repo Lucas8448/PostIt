@@ -72,6 +72,8 @@ const Home = ({ user }) => {
 const SignIn = ({ signInWithGoogle }) => {
   return (
     <div className="container sign-in-container">
+      <img src="Icon.png" alt="Post It logo" />
+      <h1>Post It!</h1>
       <button onClick={signInWithGoogle} className="link-button google-sign-in-button">
         <img src="google.png" alt="Google logo" />
         Sign in with Google

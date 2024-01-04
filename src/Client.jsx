@@ -59,23 +59,29 @@ const Client = () => {
   };
 
   return (
-    <div>
-      <h2>User Panel</h2>
-      {!conn && <input
-        type="text"
-        value={hostId}
-        onChange={e => setHostId(e.target.value)}
-        placeholder="Host ID"
-      />}
-      {!conn && <button onClick={connectToHost}>Connect to Host</button>}
-      {conn && <input
-        type="text"
-        value={message}
-        onChange={e => setMessage(e.target.value)}
-        placeholder="Type your idea here"
-      />}
-      {conn && <button onClick={sendMessage}>Send Idea</button>}
-      <ul>
+    <div className="container">
+      <h2 className="header">User Panel</h2>
+      {!conn && (
+        <input
+          className="input"
+          type="text"
+          value={hostId}
+          onChange={e => setHostId(e.target.value)}
+          placeholder="Host ID"
+        />
+      )}
+      {!conn && <button className="button" onClick={connectToHost}>Connect to Host</button>}
+      {conn && (
+        <input
+          className="input"
+          type="text"
+          value={message}
+          onChange={e => setMessage(e.target.value)}
+          placeholder="Type your idea here"
+        />
+      )}
+      {conn && <button className="button" onClick={sendMessage}>Send Idea</button>}
+      <ul className="message-list">
         {messages.map((msg, index) => (
           <li key={index}>{msg}</li>
         ))}
