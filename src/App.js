@@ -37,12 +37,16 @@ const App = () => {
 
   return (
     <Router>
+      <div className="app-nav">
+        <div>{user && user.displayName}</div>
+        {user && <SignOutButton />}
+      </div>
       <Routes>
         {user ? (
           <>
             <Route path="/host" element={<Host />} />
             <Route path="/client" element={<Client />} />
-            <Route path="/" element={<Home user={user} />} />
+            <Route path="/" element={<Home />} />
           </>
         ) : (
           <Route path="/" element={<SignIn signInWithGoogle={signInWithGoogle} />} />
@@ -52,7 +56,7 @@ const App = () => {
   );
 };
 
-const Home = ({ user }) => {
+const SignOutButton = () => {
   const navigate = useNavigate();
 
   const signOut = () => {
@@ -60,19 +64,25 @@ const Home = ({ user }) => {
   };
 
   return (
-    <div className="container home-container">
-      <div>Welcome, {user.displayName}</div>
-      <Link to="/host" className="link-button home-link">Host</Link>
-      <Link to="/client" className="link-button home-link">Join</Link>
-      <button onClick={signOut} className="link-button">Sign out</button>
+    <button onClick={signOut} className="app-button">Sign out</button>
+  );
+}
+
+const Home = () => {
+  return (
+    <div className="app-container app-home-container">
+      <Link to="/host" className="app-link-button app-home-link">Host</Link>
+      <Link to="/client" className="app-link-button app-home-link">Join</Link>
     </div>
   );
 };
 
 const SignIn = ({ signInWithGoogle }) => {
   return (
-    <div className="container sign-in-container">
-      <button onClick={signInWithGoogle} className="link-button google-sign-in-button">
+    <div className="app-container app-sign-in-container">
+      <img src="Icon.png" alt="Post It logo" />
+      <h1>Post It!</h1>
+      <button onClick={signInWithGoogle} className="app-link-button app-google-sign-in-button">
         <img src="google.png" alt="Google logo" />
         Sign in with Google
       </button>
