@@ -37,12 +37,16 @@ const App = () => {
 
   return (
     <Router>
+      <div className="app-nav">
+        <div>{user && user.displayName}</div>
+        {user && <SignOutButton />}
+      </div>
       <Routes>
         {user ? (
           <>
             <Route path="/host" element={<Host />} />
             <Route path="/client" element={<Client />} />
-            <Route path="/" element={<Home user={user} />} />
+            <Route path="/" element={<Home />} />
           </>
         ) : (
           <Route path="/" element={<SignIn signInWithGoogle={signInWithGoogle} />} />
@@ -52,7 +56,7 @@ const App = () => {
   );
 };
 
-const Home = ({ user }) => {
+const SignOutButton = () => {
   const navigate = useNavigate();
 
   const signOut = () => {
@@ -60,11 +64,15 @@ const Home = ({ user }) => {
   };
 
   return (
-    <div className="container home-container">
-      <div>Welcome, {user.displayName}</div>
+    <button onClick={signOut} className="app-button">Sign out</button>
+  );
+}
+
+const Home = () => {
+  return (
+    <div className="app-container app-home-container">
       <Link to="/host" className="app-link-button app-home-link">Host</Link>
       <Link to="/client" className="app-link-button app-home-link">Join</Link>
-      <button onClick={signOut} className="app-link-button">Sign out</button>
     </div>
   );
 };
