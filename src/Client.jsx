@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import Peer from 'peerjs';
 
 const Client = () => {
@@ -7,6 +7,12 @@ const Client = () => {
   const [messages, setMessages] = useState([]);
   const [peer, setPeer] = useState(null);
   const [conn, setConn] = useState(null);
+
+  const connectToHost = useCallback(() => {
+    if (!peer) return;
+    const connection = peer.connect("PostIt" + hostId);
+    setupConnection(connection);
+  }, [peer, hostId]);
 
   useEffect(() => {
     const newPeer = new Peer();
@@ -27,13 +33,7 @@ const Client = () => {
     }, 5000);
 
     return () => clearInterval(intervalId); // Cleanup on unmount
-  }, [peer, conn]);
-
-  const connectToHost = () => {
-    if (!peer) return;
-    const connection = peer.connect("PostIt" + hostId);
-    setupConnection(connection);
-  };
+  }, [peer, conn, connectToHost]);
 
   const setupConnection = (connection) => {
     setConn(connection);

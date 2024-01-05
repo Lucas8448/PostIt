@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import Peer from 'peerjs';
 
 const Host = () => {
@@ -14,6 +14,22 @@ const Host = () => {
     }
     return numbers;
   }
+  
+  const setupConnection = useCallback((connection) => {
+    setConn(connection);
+    connection.on('open', () => {
+      alert('A client has connected!');
+    });
+
+    connection.on('data', data => {
+      handleData(data)
+    });
+
+    connection.on('error', err => {
+      console.error('Connection error:', err);
+      setConn(null);
+    });
+  }, []);
 
   useEffect(() => {
     const newPeer = new Peer("PostIt" + generateID());
@@ -34,23 +50,7 @@ const Host = () => {
     }, 5000); // Check every 5 seconds
 
     return () => clearInterval(intervalId); // Cleanup on unmount
-  }, [conn]);
-
-  const setupConnection = (connection) => {
-    setConn(connection);
-    connection.on('open', () => {
-      alert('A client has connected!');
-    });
-
-    connection.on('data', data => {
-      handleData(data)
-    });
-
-    connection.on('error', err => {
-      console.error('Connection error:', err);
-      setConn(null);
-    });
-  };
+  }, [conn, setupConnection]);
 
   const sendData = () => {
     if (conn && conn.open) {
