@@ -88,8 +88,8 @@ const Home = ({ user }) => {
       <img src="Icon.png" id="logo" alt="Post It logo" />
       <div className="headLine">Welcome, {user && user.displayName}!</div>
       <h5>Select one of the following to begin</h5>
-      <Link to="/host" className="app-link-button app-home-link">Host</Link>
-      <Link to="/client" className="app-link-button2 app-home-link">Join</Link>
+      <Link to="/host" className="app-link-button app-home-link">Host It</Link>
+      <Link to="/client" className="app-link-button2 app-home-link">Join It</Link>
       <div className="right">
         <div className="post-it">
           <p className="sticky taped">
