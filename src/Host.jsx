@@ -3,7 +3,7 @@ import Peer from 'peerjs';
 
 const Host = () => {
   const [peerId, setPeerId] = useState('');
-  const [conn, setConn] = useState(null);
+  const [connections, setConnections] = useState([]);
   const [ideas, setIdeas] = useState([]);
   const [message, setMessage] = useState('');
 
@@ -14,9 +14,9 @@ const Host = () => {
     }
     return numbers;
   }
-  
+
   const setupConnection = useCallback((connection) => {
-    setConn(connection);
+    setConnections(prevConnections => [...prevConnections, connection]);
     connection.on('open', () => {
       alert('A client has connected!');
     });
@@ -27,7 +27,11 @@ const Host = () => {
 
     connection.on('error', err => {
       console.error('Connection error:', err);
-      setConn(null);
+      setConnections(prevConnections => prevConnections.filter(c => c !== connection));
+    });
+
+    connection.on('close', () => {
+      setConnections(prevConnections => prevConnections.filter(c => c !== connection));
     });
   }, []);
 
@@ -37,27 +41,21 @@ const Host = () => {
       setPeerId(id.slice(6));
     });
 
-    newPeer.on('connection', c => {
-      setConn(c);
-      setupConnection(c);
-    });
+    newPeer.on('connection', setupConnection);
 
-    const intervalId = setInterval(() => {
-      if (conn && !conn.open) {
-        console.log('Connection lost. Waiting for a new connection...');
-        setConn(null);
-      }
-    }, 5000); // Check every 5 seconds
-
-    return () => clearInterval(intervalId); // Cleanup on unmount
-  }, [conn, setupConnection]);
+    return () => {
+      connections.forEach(c => c.close());
+    };
+  }, [setupConnection, connections]);
 
   const sendData = () => {
-    if (conn && conn.open) {
-      setIdeas(prevIdeas => [...prevIdeas, message]);
-      conn.send({ message });
-      setMessage('');
-    }
+    setIdeas(prevIdeas => [...prevIdeas, message]);
+    connections.forEach(conn => {
+      if (conn && conn.open) {
+        conn.send({ message });
+      }
+    });
+    setMessage('');
   };
 
   const handleData = (data) => {
