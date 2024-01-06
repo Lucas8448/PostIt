@@ -4,7 +4,6 @@ import Peer from 'peerjs';
 const Host = () => {
   const [peerId, setPeerId] = useState('');
   const [connections, setConnections] = useState([]);
-  const [ideas, setIdeas] = useState([]);
   const [message, setMessage] = useState('');
 
   function generateID() {
@@ -22,7 +21,7 @@ const Host = () => {
     });
 
     connection.on('data', data => {
-      handleData(data)
+      handleData(data, connection.peer);
     });
 
     connection.on('error', err => {
@@ -49,17 +48,17 @@ const Host = () => {
   }, [setupConnection, connections]);
 
   const sendData = () => {
-    setIdeas(prevIdeas => [...prevIdeas, message]);
+    const dataToSend = JSON.stringify({ message });
     connections.forEach(conn => {
       if (conn && conn.open) {
-        conn.send({ message });
+        conn.send(dataToSend);
       }
     });
     setMessage('');
   };
 
-  const handleData = (data) => {
-    setIdeas(prevIdeas => [...prevIdeas, data.message]);
+  const handleData = (data, id) => {
+    console.log(`Data received from ${id}:`, JSON.parse(data));
   };
 
   return (
@@ -70,14 +69,9 @@ const Host = () => {
         type="text"
         value={message}
         onChange={e => setMessage(e.target.value)}
-        placeholder="Type your idea here"
+        placeholder="Enter your message"
       />
-      <button onClick={sendData}>Send Idea</button>
-      <ul>
-        {ideas.map((idea, index) => (
-          <li key={index}>{idea}</li>
-        ))}
-      </ul>
+      <button onClick={sendData}>Send Message</button>
     </div>
   );
 };
