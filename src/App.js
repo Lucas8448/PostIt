@@ -15,21 +15,9 @@ import './App.css';
 
 const App = () => {
   const [user, setUser] = useState(null);
-  const projectDetailsRef = useRef(null); 
 
   const scrollToHome = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
-  
-
-  const renderProjectDetails = () => {
-    return (
-      <div className="app-container" id="project-details" ref={projectDetailsRef}>
-        <h2>Discover the Idea Board</h2>
-        <p>This is an innovative platform where you can anonymously share and develop ideas with others. It's a space for creativity and collaboration without any barriers.</p>
-        
-      </div>
-    );
   };
 
   useEffect(() => {
