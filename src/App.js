@@ -9,7 +9,6 @@ import {
 import { auth, googleAuthProvider } from './firebaseConfig';
 import { signInWithPopup } from "firebase/auth";
 import { Analytics } from '@vercel/analytics/react';
-import { SpeedInsights } from "@vercel/speed-insights/next"
 import Host from './Host';
 import Client from './Client';
 import './App.css';
@@ -43,7 +42,6 @@ const App = () => {
         <div>{user && user.displayName}</div>
         {user && <SignOutButton />}
         <Analytics />
-        <SpeedInsights/>
       </div>
       <Routes>
         {user ? (
