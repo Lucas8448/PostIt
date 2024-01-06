@@ -4,7 +4,7 @@ import Peer from 'peerjs';
 const Host = () => {
   const [peerId, setPeerId] = useState('');
   const [connections, setConnections] = useState([]);
-  const [message, setMessage] = useState('');
+  const [data, setData] = useState('');
 
   function generateID() {
     let numbers = '';
@@ -35,7 +35,17 @@ const Host = () => {
   }, []);
 
   useEffect(() => {
-    const newPeer = new Peer("PostIt" + generateID());
+    const newPeer = new Peer({
+      config: {
+        'iceServers': [
+          { url: 'stun:stun.l.google.com:19302' },
+          { url: 'stun:stun1.l.google.com:19302' },
+          { url: 'stun:stun2.l.google.com:19302' },
+          { url: 'stun:stun3.l.google.com:19302' },
+          { url: 'stun:stun4.l.google.com:19302' },
+        ],
+      }
+    },"PostIt" + generateID());
     newPeer.on('open', id => {
       setPeerId(id.slice(6));
     });
@@ -48,13 +58,13 @@ const Host = () => {
   }, [setupConnection, connections]);
 
   const sendData = () => {
-    const dataToSend = JSON.stringify({ message });
+    const dataToSend = JSON.stringify({ data });
     connections.forEach(conn => {
       if (conn && conn.open) {
         conn.send(dataToSend);
       }
     });
-    setMessage('');
+    setData('');
   };
 
   const handleData = (data, id) => {
@@ -67,11 +77,11 @@ const Host = () => {
       <p>Host ID: {peerId}</p>
       <input
         type="text"
-        value={message}
-        onChange={e => setMessage(e.target.value)}
-        placeholder="Enter your message"
+        value={data}
+        onChange={e => setData(e.target.value)}
+        placeholder="Enter your data"
       />
-      <button onClick={sendData}>Send Message</button>
+      <button onClick={sendData}>Send Data</button>
     </div>
   );
 };
