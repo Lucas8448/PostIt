@@ -8,6 +8,7 @@ import {
 } from 'react-router-dom';
 import { auth, googleAuthProvider } from './firebaseConfig';
 import { signInWithPopup } from "firebase/auth";
+import { Analytics } from '@vercel/analytics/react';
 import Host from './Host';
 import Client from './Client';
 import './App.css';
@@ -40,6 +41,7 @@ const App = () => {
       <div className="app-nav">
         <div>{user && user.displayName}</div>
         {user && <SignOutButton />}
+        <Analytics />
       </div>
       <Routes>
         {user ? (
