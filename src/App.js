@@ -38,10 +38,10 @@ const App = () => {
 
   return (
     <Router>
+      <Analytics />
       <div className="app-nav">
         <div>{user && user.displayName}</div>
         {user && <SignOutButton />}
-        <Analytics />
       </div>
       <Routes>
         {user ? (
