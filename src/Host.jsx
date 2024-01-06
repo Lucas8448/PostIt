@@ -44,8 +44,9 @@ const Host = () => {
           { url: 'stun:stun3.l.google.com:19302' },
           { url: 'stun:stun4.l.google.com:19302' },
         ],
-      }
-    },"PostIt" + generateID());
+      },
+      id: 'PostIt' + generateID(),
+    });
     newPeer.on('open', id => {
       setPeerId(id.slice(6));
     });
