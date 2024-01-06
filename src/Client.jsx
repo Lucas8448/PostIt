@@ -3,7 +3,7 @@ import Peer from 'peerjs';
 
 const Client = () => {
   const [hostId, setHostId] = useState('');
-  const [message, setMessage] = useState('');
+  const [data, setData] = useState('');
   const [peer, setPeer] = useState(null);
   const [conn, setConn] = useState(null);
   
@@ -50,13 +50,11 @@ const Client = () => {
     return () => clearInterval(intervalId);
   }, [peer, conn, connectToHost, setupConnection]);
 
-  
-
-  const sendMessage = () => {
+  const sendData = () => {
     if (conn && conn.open) {
-      const dataToSend = JSON.stringify({ message });
+      const dataToSend = JSON.stringify({ data });
       conn.send(dataToSend);
-      setMessage('');
+      setData('');
     }
   };
   
@@ -84,11 +82,11 @@ const Client = () => {
           <input
             className="input"
             type="text"
-            value={message}
-            onChange={e => setMessage(e.target.value)}
-            placeholder="Enter your message"
+            value={data}
+            onChange={e => setData(e.target.value)}
+            placeholder="Enter your data"
           />
-          <button className="button" onClick={sendMessage}>Send Message</button>
+          <button className="button" onClick={sendData}>Send Data</button>
         </>
       )}
     </div>
