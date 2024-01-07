@@ -6,7 +6,7 @@ import {
   Link,
   useNavigate
 } from 'react-router-dom';
-import { auth, googleAuthProvider } from './firebaseConfig';
+import { auth, googleAuthProvider, githubAuthProvider } from './firebaseConfig';
 import { signInWithPopup } from "firebase/auth";
 import { Analytics } from '@vercel/analytics/react';
 import Host from './Host';
@@ -40,6 +40,14 @@ const App = () => {
     }
   };
 
+  const signInWithGithub = async () => {
+    try {
+      await signInWithPopup(auth, githubAuthProvider);
+    } catch (error) {
+      console.error("Error signing in with Github", error);
+    }
+  };
+
   return (
     <Router>
       <Analytics />
@@ -60,7 +68,7 @@ const App = () => {
             <Route path="/" element={<Home user={user} />} />
           </>
         ) : (
-          <Route path="/" element={<SignIn signInWithGoogle={signInWithGoogle} />} />
+          <Route path="/" element={<SignIn signInWithGoogle={signInWithGoogle} signInWithGithub={signInWithGithub}/>} />
         )}
       </Routes>
     </Router>
@@ -108,7 +116,7 @@ const Home = ({ user }) => {
   );
 };
 
-const SignIn = ({ signInWithGoogle }) => {
+const SignIn = ({ signInWithGoogle, signInWithGithub }) => {
   return (
     <div className="app-container app-sign-in-container">
       <img src="Icon.png" alt="Post It logo" />
@@ -116,6 +124,10 @@ const SignIn = ({ signInWithGoogle }) => {
       <button onClick={signInWithGoogle} className="app-link-button app-google-sign-in-button">
         <img src="google.png" alt="Google logo" />
         Sign in with Google
+      </button>
+      <button onClick={signInWithGithub} className="app-link-button app-github-sign-in-button">
+        <img src="github.png" alt="Github logo" />
+        Sign in with Github
       </button>
     </div>
   );
