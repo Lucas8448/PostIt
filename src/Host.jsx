@@ -3,8 +3,8 @@ import Peer from 'peerjs';
 
 const Host = () => {
   const [peerId, setPeerId] = useState('');
+  const [notes, setNotes] = useState([]);
   const [connections, setConnections] = useState([]);
-  const [data, setData] = useState('');
 
   function generateID() {
     let numbers = '';
@@ -13,6 +13,38 @@ const Host = () => {
     }
     return numbers;
   }
+
+  const sendData = useCallback(() => {
+    const dataToSend = JSON.stringify({ action: 'updateNotes', notes });
+    connections.forEach(conn => {
+      if (conn && conn.open) {
+        conn.send(dataToSend);
+      }
+    });
+  }, [notes, connections]);
+
+  const acceptClient = useCallback((clientName) => {
+    setNotes(prevNotes => [...prevNotes, { name: clientName, notes: [] }]);
+    sendData();
+  }, [sendData]);
+
+  const handleData = useCallback((data, id) => {
+    const parsedData = JSON.parse(data);
+    const action = parsedData.action;
+    switch (action) {
+      case 'updateNotes':
+        console.log('Received updated notes:', parsedData.notes);
+        setNotes(parsedData.notes);
+        break;
+      case 'requestToJoin':
+        if (window.confirm('Do you want to accept this client?')) {
+          acceptClient(id);
+        }
+        break;
+      default:
+        console.log(`Data received from ${id}:`, parsedData);
+    }
+  }, [acceptClient]);
 
   const setupConnection = useCallback((connection) => {
     setConnections(prevConnections => [...prevConnections, connection]);
@@ -23,16 +55,7 @@ const Host = () => {
     connection.on('data', data => {
       handleData(data, connection.peer);
     });
-
-    connection.on('error', err => {
-      console.error('Connection error:', err);
-      setConnections(prevConnections => prevConnections.filter(c => c !== connection));
-    });
-
-    connection.on('close', () => {
-      setConnections(prevConnections => prevConnections.filter(c => c !== connection));
-    });
-  }, []);
+  }, [handleData]);
 
   useEffect(() => {
     const newPeer = new Peer("PostIt" + generateID());
@@ -47,31 +70,18 @@ const Host = () => {
     };
   }, [setupConnection, connections]);
 
-  const sendData = () => {
-    const dataToSend = JSON.stringify({ data });
-    connections.forEach(conn => {
-      if (conn && conn.open) {
-        conn.send(dataToSend);
-      }
-    });
-    setData('');
-  };
-
-  const handleData = (data, id) => {
-    console.log(`Data received from ${id}:`, JSON.parse(data));
-  };
-
   return (
     <div>
       <h2>Host Panel</h2>
       <p>Host ID: {peerId}</p>
-      <input
-        type="text"
-        value={data}
-        onChange={e => setData(e.target.value)}
-        placeholder="Enter your data"
-      />
-      <button onClick={sendData}>Send Data</button>
+      {notes.map((note, index) => (
+        <div key={index}>
+          <h3>{note.name}'s Notes:</h3>
+          {note.notes.map((noteItem, index) => (
+            <p key={index}>{noteItem}</p>
+          ))}
+        </div>
+      ))}
     </div>
   );
 };
