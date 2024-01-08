@@ -106,6 +106,19 @@ const Home = ({ user }) => {
   return (
     <div className="app-container app-home-container" ref={mainPageHome}>
       <img src="Icon.png" id="logo" alt="Post It logo" />
+      <div className="left">
+        <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3064586769363815"
+        crossorigin="anonymous"></script>
+        <ins className="adsbygoogle"
+             style={{ display: "block" }}
+             data-ad-client="ca-pub-3064586769363815"
+             data-ad-slot="3759648543"
+             data-ad-format="auto"
+             data-full-width-responsive="true"></ins>
+        <script>
+             (adsbygoogle = window.adsbygoogle || []).push({});
+        </script>
+      </div>
       <div className="headLine">Welcome, {user && user.displayName}!</div>
       <h5>Select one of the following to begin</h5>
       <Link to="/host" className="app-link-button app-home-link">Host It<span className="material-symbols-outlined">dns</span></Link>
