@@ -9,7 +9,8 @@ const firebaseConfig = {
   storageBucket: "postit-d0476.appspot.com",
   messagingSenderId: "52960980158",
   appId: "1:52960980158:web:1c086ea0f98ed2bfcec2ef",
-  measurementId: "G-09HGQLX9G2"
+  measurementId: "G-09HGQLX9G2",
+  databaseURL: "https://postit-d0476-default-rtdb.europe-west1.firebasedatabase.app"
 };
 
 const app = initializeApp(firebaseConfig);
