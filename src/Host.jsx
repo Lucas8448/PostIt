@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { database } from './firebase';
+import { database } from './firebaseConfig';
 import { ref, push, onValue, remove } from 'firebase/database';
 
 const Host = () => {
@@ -7,11 +7,9 @@ const Host = () => {
   const [ideas, setIdeas] = useState([]);
 
   useEffect(() => {
-    // Create a new session
     const newSessionRef = push(ref(database, 'sessions'));
     setSessionId(newSessionRef.key);
 
-    // Set up listener for ideas submitted to this session
     const ideasRef = ref(database, `sessions/${newSessionRef.key}/ideas`);
     onValue(ideasRef, (snapshot) => {
       const ideasData = snapshot.val();
@@ -22,7 +20,6 @@ const Host = () => {
       setIdeas(loadedIdeas);
     });
 
-    // Cleanup listener on unmount
     return () => remove(ideasRef);
   }, []);
 
