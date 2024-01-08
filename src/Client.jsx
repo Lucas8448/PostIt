@@ -3,10 +3,28 @@ import Peer from 'peerjs';
 
 const Client = () => {
   const [hostId, setHostId] = useState('');
+  const [notes, setNotes] = useState([]);
   const [data, setData] = useState('');
   const [peer, setPeer] = useState(null);
   const [conn, setConn] = useState(null);
-  
+
+  const handleData = useCallback((data, id) => {
+    const parsedData = JSON.parse(data);
+    const action = parsedData.action;
+    switch (action) {
+      case 'accepted':
+        console.log('User accepted into session by host');
+        alert('You have been accepted into the session by the host!');
+        break;
+      case 'updateNotes':
+        console.log('Received updated notes:', parsedData.notes);
+        setNotes(parsedData.notes);
+        break;
+      default:
+        console.log(`Data received from ${id}:`, parsedData);
+    }
+  }, []);
+
   const setupConnection = useCallback((connection) => {
     setConn(connection);
     connection.on('open', () => {
@@ -21,13 +39,7 @@ const Client = () => {
       console.error('Connection error:', err);
       setConn(null);
     });
-  }, []);
-    
-  const connectToHost = useCallback(() => {
-    if (!peer) return;
-    const connection = peer.connect("PostIt" + hostId);
-    setupConnection(connection);
-  }, [peer, hostId, setupConnection]);
+  }, [handleData]);
 
   useEffect(() => {
     const newPeer = new Peer();
@@ -40,26 +52,26 @@ const Client = () => {
       setupConnection(c);
     });
 
-    const intervalId = setInterval(() => {
-      if (conn && !conn.open) {
-        console.log('Connection lost. Attempting to reconnect...');
-        connectToHost();
+    return () => {
+      if (conn) {
+        conn.close();
       }
-    }, 5000);
+    };
+  }, [setupConnection, conn]);
 
-    return () => clearInterval(intervalId);
-  }, [peer, conn, connectToHost, setupConnection]);
+  const connectToHost = useCallback(() => {
+    if (!peer) return;
+    const connection = peer.connect("PostIt" + hostId);
+    setupConnection(connection);
+  }, [peer, hostId, setupConnection]);
 
-  const sendData = () => {
+  const sendNote = (event) => {
+    event.preventDefault();
     if (conn && conn.open) {
-      const dataToSend = JSON.stringify({ data });
+      const dataToSend = JSON.stringify({ action: 'addNote', note: data });
       conn.send(dataToSend);
       setData('');
     }
-  };
-  
-  const handleData = (data, id) => {
-    console.log(`Data received from ${id}:`, JSON.parse(data));
   };
 
   return (
@@ -79,14 +91,18 @@ const Client = () => {
       )}
       {conn && (
         <>
-          <input
-            className="input"
-            type="text"
-            value={data}
-            onChange={e => setData(e.target.value)}
-            placeholder="Enter your data"
-          />
-          <button className="button" onClick={sendData}>Send Data</button>
+          <form onSubmit={sendNote}>
+            <input type="text" value={data} onChange={e => setData(e.target.value)} placeholder="Enter your note" />
+            <button type="submit">Submit Note</button>
+          </form>
+          {notes.map((note, index) => (
+            <div key={index}>
+              <h3>{note.name}'s Notes:</h3>
+              {note.notes.map((noteItem, index) => (
+                <p key={index}>{noteItem}</p>
+              ))}
+            </div>
+          ))}
         </>
       )}
     </div>

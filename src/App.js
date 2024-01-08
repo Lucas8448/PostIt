@@ -63,8 +63,8 @@ const App = () => {
       <Routes>
         {user ? (
           <>
-            <Route path="/host" element={<Host />} />
-            <Route path="/client" element={<Client />} />
+            <Route path="/host" element={<Host user={user} />} />
+            <Route path="/client" element={<Client user={user} />} />
             <Route path="/" element={<Home user={user} />} />
           </>
         ) : (
