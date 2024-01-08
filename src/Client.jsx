@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { database } from './firebase';
+import { database } from './firebaseConfig';
 import { ref, push } from 'firebase/database';
 
 const Client = () => {
