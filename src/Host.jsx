@@ -3,9 +3,8 @@ import Peer from 'peerjs';
 
 const Host = () => {
   const [peerId, setPeerId] = useState('');
-  const [conn, setConn] = useState(null);
-  const [ideas, setIdeas] = useState([]);
-  const [message, setMessage] = useState('');
+  const [connections, setConnections] = useState([]);
+  const [data, setData] = useState('');
 
   function generateID() {
     let numbers = '';
@@ -14,20 +13,24 @@ const Host = () => {
     }
     return numbers;
   }
-  
+
   const setupConnection = useCallback((connection) => {
-    setConn(connection);
+    setConnections(prevConnections => [...prevConnections, connection]);
     connection.on('open', () => {
       alert('A client has connected!');
     });
 
     connection.on('data', data => {
-      handleData(data)
+      handleData(data, connection.peer);
     });
 
     connection.on('error', err => {
       console.error('Connection error:', err);
-      setConn(null);
+      setConnections(prevConnections => prevConnections.filter(c => c !== connection));
+    });
+
+    connection.on('close', () => {
+      setConnections(prevConnections => prevConnections.filter(c => c !== connection));
     });
   }, []);
 
@@ -37,31 +40,25 @@ const Host = () => {
       setPeerId(id.slice(6));
     });
 
-    newPeer.on('connection', c => {
-      setConn(c);
-      setupConnection(c);
-    });
+    newPeer.on('connection', setupConnection);
 
-    const intervalId = setInterval(() => {
-      if (conn && !conn.open) {
-        console.log('Connection lost. Waiting for a new connection...');
-        setConn(null);
-      }
-    }, 5000); // Check every 5 seconds
-
-    return () => clearInterval(intervalId); // Cleanup on unmount
-  }, [conn, setupConnection]);
+    return () => {
+      connections.forEach(c => c.close());
+    };
+  }, [setupConnection, connections]);
 
   const sendData = () => {
-    if (conn && conn.open) {
-      setIdeas(prevIdeas => [...prevIdeas, message]);
-      conn.send({ message });
-      setMessage('');
-    }
+    const dataToSend = JSON.stringify({ data });
+    connections.forEach(conn => {
+      if (conn && conn.open) {
+        conn.send(dataToSend);
+      }
+    });
+    setData('');
   };
 
-  const handleData = (data) => {
-    setIdeas(prevIdeas => [...prevIdeas, data.message]);
+  const handleData = (data, id) => {
+    console.log(`Data received from ${id}:`, JSON.parse(data));
   };
 
   return (
@@ -70,16 +67,11 @@ const Host = () => {
       <p>Host ID: {peerId}</p>
       <input
         type="text"
-        value={message}
-        onChange={e => setMessage(e.target.value)}
-        placeholder="Type your idea here"
+        value={data}
+        onChange={e => setData(e.target.value)}
+        placeholder="Enter your data"
       />
-      <button onClick={sendData}>Send Idea</button>
-      <ul>
-        {ideas.map((idea, index) => (
-          <li key={index}>{idea}</li>
-        ))}
-      </ul>
+      <button onClick={sendData}>Send Data</button>
     </div>
   );
 };

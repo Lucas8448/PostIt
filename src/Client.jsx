@@ -3,16 +3,31 @@ import Peer from 'peerjs';
 
 const Client = () => {
   const [hostId, setHostId] = useState('');
-  const [message, setMessage] = useState('');
-  const [messages, setMessages] = useState([]);
+  const [data, setData] = useState('');
   const [peer, setPeer] = useState(null);
   const [conn, setConn] = useState(null);
+  
+  const setupConnection = useCallback((connection) => {
+    setConn(connection);
+    connection.on('open', () => {
+      alert('Connected to the host!');
+    });
 
+    connection.on('data', data => {
+      handleData(data, connection.peer);
+    });
+
+    connection.on('error', err => {
+      console.error('Connection error:', err);
+      setConn(null);
+    });
+  }, []);
+    
   const connectToHost = useCallback(() => {
     if (!peer) return;
     const connection = peer.connect("PostIt" + hostId);
     setupConnection(connection);
-  }, [peer, hostId]);
+  }, [peer, hostId, setupConnection]);
 
   useEffect(() => {
     const newPeer = new Peer();
@@ -32,60 +47,48 @@ const Client = () => {
       }
     }, 5000);
 
-    return () => clearInterval(intervalId); // Cleanup on unmount
-  }, [peer, conn, connectToHost]);
+    return () => clearInterval(intervalId);
+  }, [peer, conn, connectToHost, setupConnection]);
 
-  const setupConnection = (connection) => {
-    setConn(connection);
-    connection.on('open', () => {
-      alert('Connected to the host!');
-    });
-
-    connection.on('data', data => {
-      setMessages(prevMessages => [...prevMessages, data.message]);
-    });
-
-    connection.on('error', err => {
-      console.error('Connection error:', err);
-      setConn(null);
-    });
-  };
-
-  const sendMessage = () => {
+  const sendData = () => {
     if (conn && conn.open) {
-      conn.send({ message });
-      setMessage('');
+      const dataToSend = JSON.stringify({ data });
+      conn.send(dataToSend);
+      setData('');
     }
+  };
+  
+  const handleData = (data, id) => {
+    console.log(`Data received from ${id}:`, JSON.parse(data));
   };
 
   return (
     <div className="container">
       <h2 className="header">User Panel</h2>
       {!conn && (
-        <input
-          className="input"
-          type="text"
-          value={hostId}
-          onChange={e => setHostId(e.target.value)}
-          placeholder="Host ID"
-        />
+        <>
+          <input
+            className="input"
+            type="text"
+            value={hostId}
+            onChange={e => setHostId(e.target.value)}
+            placeholder="Host ID"
+          />
+          <button className="button" onClick={connectToHost}>Connect to Host</button>
+        </>
       )}
-      {!conn && <button className="button" onClick={connectToHost}>Connect to Host</button>}
       {conn && (
-        <input
-          className="input"
-          type="text"
-          value={message}
-          onChange={e => setMessage(e.target.value)}
-          placeholder="Type your idea here"
-        />
+        <>
+          <input
+            className="input"
+            type="text"
+            value={data}
+            onChange={e => setData(e.target.value)}
+            placeholder="Enter your data"
+          />
+          <button className="button" onClick={sendData}>Send Data</button>
+        </>
       )}
-      {conn && <button className="button" onClick={sendMessage}>Send Idea</button>}
-      <ul className="message-list">
-        {messages.map((msg, index) => (
-          <li key={index}>{msg}</li>
-        ))}
-      </ul>
     </div>
   );
 };
