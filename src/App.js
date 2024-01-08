@@ -83,7 +83,7 @@ const SignOutButton = () => {
   };
 
   return (
-    <button onClick={signOut} className="app-button">Sign out<span class="material-symbols-outlined">logout</span></button>
+    <button onClick={signOut} className="app-button">Sign out<span className="material-symbols-outlined">logout</span></button>
   );
 }
 
@@ -96,8 +96,8 @@ const Home = ({ user }) => {
       <img src="Icon.png" id="logo" alt="Post It logo" />
       <div className="headLine">Welcome, {user && user.displayName}!</div>
       <h5>Select one of the following to begin</h5>
-      <Link to="/host" className="app-link-button app-home-link">Host It<span class="material-symbols-outlined">dns</span></Link>
-      <Link to="/client" className="app-link-button2 app-home-link">Join It<span class="material-symbols-outlined">devices</span></Link>
+      <Link to="/host" className="app-link-button app-home-link">Host It<span className="material-symbols-outlined">dns</span></Link>
+      <Link to="/client" className="app-link-button2 app-home-link">Join It<span className="material-symbols-outlined">devices</span></Link>
       <div className="right">
         <div className="post-it">
           <p className="sticky taped">
