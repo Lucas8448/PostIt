@@ -15,6 +15,7 @@ import './App.css';
 
 const App = () => {
   const [user, setUser] = useState(null);
+  const navigate = useNavigate();
 
   const scrollToHome = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -22,15 +23,16 @@ const App = () => {
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged(user => {
-      if (user) {
+      if (user && (user.email || user.displayName)) {
         setUser(user);
       } else {
         setUser(null);
+        navigate('/');
       }
     });
 
     return () => unsubscribe();
-  }, []);
+  }, [navigate]);
 
   const signInWithGoogle = async () => {
     try {
@@ -66,7 +68,7 @@ const App = () => {
             <Route 
               path="/host" 
               element={<Host 
-                owner={user.displayName} 
+                owner={user.uid} 
                 owner_email={user.email} 
               />} 
             />
@@ -102,7 +104,6 @@ const SignOutButton = () => {
 const Home = ({ user }) => {
   const mainPageHome = useRef(null);
 
-  
   return (
     <div className="app-container app-home-container" ref={mainPageHome}>
       <img src="Icon.png" id="logo" alt="Post It logo" />
