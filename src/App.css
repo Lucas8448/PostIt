@@ -1,38 +1,368 @@
-.App {
+:root {
+  --primary-color: #17252a;
+  --secondary-color: #2b7a78;
+  --tertiary-color: #3aafa9;
+  --quaternary-color: #feffff;
+  --dark-tertiary: #def2f1;
+}
+
+button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background-color: #f4f7f6;
+  line-height: 1.6;
+  max-width: 100vw;
+  max-height: 100vh;
+  overflow-x: hidden;
+  overflow-y: hidden;
+  font-family: 'Give You Glory', 'roboto', sans-serif;
+  color: var(--quaternary-color);
+  background-color: var(--primary-color);
+}
+
+.app-nav {
+  position: fixed;
+  background-color: var(--secondary-color);
+  padding: 10px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  box-sizing: border-box;
+  z-index: 100;
+}
+
+.left {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.app-nav div {
+  color: white;
+  font-size: 20px;
+}
+
+.app-button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s, box-shadow 0.3s;
+
+}
+
+.app-button:hover {
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.app-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  flex-direction: column;
+}
+
+.app-container img {
+  height: 300px;
+  margin-bottom: 20px;
+}
+
+.app-home-container,
+.app-sign-in-container {
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   text-align: center;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+.app-link-button,
+.app-link-button2 {
+  margin: 10px;
+  padding: 10px 20px;
+  text-decoration: none;
+  color: white;
+  border-radius: 5px;
+  background-color: var(--tertiary-color);
+  text-align: center;
+  display: inline-block;
+  cursor: pointer;
+  transition: background-color 0.3s, border-color 0.3s;
+  z-index: 10;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
+  gap: 8px;
+}
+
+.app-home-link {
+  border: 1px solid var(--secondary-color);
+  width: 10vw;
+}
+
+.app-link-button:hover,
+.app-link-button2:hover {
+  background-color: var(--primary-color);
+}
+
+.app-sign-in-container {
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.app-google-sign-in-button {
+  font-weight: bold;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid black;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s, box-shadow 0.3s;
+}
+
+.app-google-sign-in-button img {
+  margin-right: 10px;
+  margin-top: auto;
+  margin-bottom: auto;
+  height: 25px;
+  width: auto;
+}
+
+.app-google-sign-in-button:hover {
+  background-color: black;
   color: white;
 }
 
-.App-link {
-  color: #61dafb;
+.app-google-sign-in-button:active {
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3) inset;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
+.app-github-sign-in-button {
+  font-weight: bold;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid black;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s, box-shadow 0.3s;
+}
+
+.app-github-sign-in-button img {
+  margin-right: 10px;
+  margin-top: auto;
+  margin-bottom: auto;
+  height: 25px;
+  width: auto;
+  transition: filter 0.3s ease;
+}
+
+
+.app-github-sign-in-button:hover {
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  background-color: black;
+  color: white;
+}
+
+.app-github-sign-in-button:hover img {
+  filter: invert(1);
+}
+
+.app-github-sign-in-button:active {
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3) inset;
+}
+
+.headLine {
+  font-size: 30px;
+  font-weight: bold;
+}
+
+.right {
+  padding: 20px;
+  position: absolute;
+  right: 100px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-direction: column;
+}
+
+@media (max-width:1400px) {
+  .right {
+    background-color: none;
+    background: none;
+    border: none;
+    box-shadow: none;
+    padding-top: 200px;
+    right: 10;
   }
-  to {
-    transform: rotate(360deg);
+
+  .note {
+    display: none;
+  }
+}
+
+@media (max-width:1200px) {
+  .right {
+    position: relative;
+    padding-top: 0px;
+    right: 0;
+  }
+}
+
+.post-it {
+  display: table;
+  margin: 5em auto 0;
+}
+
+.sticky {
+  -webkit-box-shadow: #DDD 0px 1px 2px;
+  position: relative;
+  background-color: var(--tertiary-color);
+  border-color: var(--primary-color);
+  color: var(--quaternary-color);
+  text-align: center;
+  margin: 2.5em 0px;
+  padding: 1.5em 1em;
+  -webkit-box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.25);
+  -moz-box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.25);
+  box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.25);
+  width: 250px;
+  font-family: 'Indie Flower', cursive;
+  font-family: 'Give You Glory', cursive;
+  font-family: 'The Girl Next Door', cursive;
+  font-family: 'Gloria Hallelujah', cursive;
+}
+
+.taped {
+  display: table-cell;
+  text-align: center;
+  vertical-align: middle;
+}
+
+.sticky.taped:after {
+  display: block;
+  content: "";
+  position: absolute;
+  width: 110px;
+  height: 30px;
+  top: -21px;
+  left: 30%;
+  border: 1px solid #fff;
+  background: rgba(254, 254, 254, .6);
+  -webkit-box-shadow: 0px 0 3px rgba(0, 0, 0, 0.1);
+  -moz-box-shadow: 0px 0 3px rgba(0, 0, 0, 0.1);
+  box-shadow: 0px 0 3px rgba(0, 0, 0, 0.1);
+}
+
+.note {
+  -webkit-box-shadow: #DDD 0px 1px 2px;
+  position: relative;
+  background-color: var(--secondary-color);
+  border-color: var(--tertiary-color);
+  color: #fff;
+  text-align: center;
+  margin: 1.5em auto;
+  padding: 1.5em 1em;
+  -webkit-box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.25);
+  -moz-box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.25);
+  box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.25);
+  -webkit-transform: rotate(2deg);
+  -moz-transform: rotate(2deg);
+  -o-transform: rotate(2deg);
+  -ms-transform: rotate(2deg);
+  transform: rotate(2deg);
+  width: 250px;
+  font-family: 'The Girl Next Door', cursive;
+  /*originally with brain flower font*/
+  font-size: 1em;
+}
+
+.note:after {
+  display: block;
+  content: "";
+  position: absolute;
+  width: 110px;
+  height: 30px;
+  top: -21px;
+  left: 30%;
+  border: 1px solid #fff;
+  background: rgba(254, 254, 254, .6);
+  -webkit-box-shadow: 0px 0 3px rgba(0, 0, 0, 0.1);
+  -moz-box-shadow: 0px 0 3px rgba(0, 0, 0, 0.1);
+  box-shadow: 0px 0 3px rgba(0, 0, 0, 0.1);
+}
+
+
+#logo {
+  width: 100px;
+  height: 100px;
+  position: relative;
+  left: 0;
+  opacity: 0.5;
+}
+
+@media (max-width: 1500px) {
+  #logo {
+    width: 100px;
+    height: 100px;
+    position: relative;
+  }
+}
+
+.cardTitle {
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.left .cardBox {
+  top: 25%;
+  border-radius: 10px;
+  background: var(--secondary-color);
+  color: #fff;
+  padding: 20px;
+  width: 20%;
+  position: absolute;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-direction: column;
+  left: 100px;
+  gap: 20px
+}
+
+.cardJoin {
+  border-radius: 10px;
+  padding: 20px;
+  background: var(--primary-color);
+  color: black;
+}
+
+@media (max-width: 1200px) {
+  .left {
+    display: none;
   }
 }

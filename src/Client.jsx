@@ -1,71 +1,78 @@
 import React, { useState, useEffect } from 'react';
-import Peer from 'peerjs';
+import { database } from './firebaseConfig';
+import { ref, push, onValue, set } from 'firebase/database';
 
-const Client = () => {
-  const [hostId, setHostId] = useState('');
-  const [message, setMessage] = useState('');
-  const [messages, setMessages] = useState([]);
-  const [peer, setPeer] = useState(null);
-  const [conn, setConn] = useState(null);
+const Client = ({ submitter, submitter_email }) => {
+  const [sessionId, setSessionId] = useState('');
+  const [idea, setIdea] = useState('');
+  const [ideas, setIdeas] = useState([]);
 
   useEffect(() => {
-    const newPeer = new Peer();
-    newPeer.on('open', id => {
-      setPeer(newPeer);
-    });
-
-    newPeer.on('connection', c => {
-      setConn(c);
-      setupConnection(c);
-    });
-  }, []);
-
-  const connectToHost = () => {
-    if (!peer) return;
-    const connection = peer.connect(hostId);
-    setupConnection(connection);
-  };
-
-  const setupConnection = (connection) => {
-    setConn(connection);
-    connection.on('open', () => {
-      alert('Connected to the host!');
-    });
-
-    connection.on('data', data => {
-      setMessages(data); // Update messages with received ideas
-    });
-  };
-
-  const sendMessage = () => {
-    if (conn && conn.open) {
-      conn.send(message); // Send the message when the button is clicked
-      setMessage('');
+    if (sessionId) {
+      const ideasRef = ref(database, `sessions/${sessionId}/ideas`);
+      onValue(ideasRef, (snapshot) => {
+        const ideasData = snapshot.val();
+        const loadedIdeas = ideasData ? Object.keys(ideasData).map(key => ({
+          id: key,
+          content: ideasData[key].content
+        })) : [];
+        setIdeas(loadedIdeas);
+      });
     }
+  }, [sessionId]);
+
+  const submitIdea = async () => {
+    if (!sessionId) {
+      alert('Please enter a session ID.');
+      return;
+    }
+    if (!idea) {
+      alert('Please enter an idea.');
+      return;
+    }
+    const newIdeaRef = push(ref(database, `sessions/${sessionId}/ideas`));
+    await set(newIdeaRef, {
+      content: idea,
+      createdAt: Date.now()
+    });
+
+    const submitterRef = ref(database, `sessions/${sessionId}/submitters/${newIdeaRef.key}`);
+    await set(submitterRef, {
+      submitterUID: submitter,
+      submitterEmail: submitter_email
+    });
+
+    setIdea('');
   };
 
   return (
-    <div>
-      <h2>User Panel</h2>
+    <div className="container">
+      <h2 className="header">User Panel</h2>
       <input
+        className="input"
         type="text"
-        value={hostId}
-        onChange={e => setHostId(e.target.value)}
-        placeholder="Host ID"
+        value={sessionId}
+        onChange={(e) => setSessionId(e.target.value)}
+        placeholder="Session ID"
       />
-      <button onClick={connectToHost}>Connect to Host</button>
       <input
+        className="input"
         type="text"
-        value={message}
-        onChange={e => setMessage(e.target.value)}
-        placeholder="Type your idea here"
+        value={idea}
+        onChange={(e) => setIdea(e.target.value)}
+        placeholder="Enter your idea here"
       />
-      <button onClick={sendMessage}>Send Idea</button>
-      <ul>
-        {messages.map((msg, index) => (
-          <li key={index}>{msg}</li>
-        ))}
-      </ul>
+      <button className="button" onClick={submitIdea}>
+        Submit Idea
+      </button>
+      <div>
+        <h3>Submitted Ideas:</h3>
+        <ul>
+          {ideas.map((idea) => (
+            <li key={idea.id}>{idea.content}</li>
+          ))}
+        </ul>
+      </div>
     </div>
   );
 };
