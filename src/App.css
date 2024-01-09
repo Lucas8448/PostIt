@@ -100,7 +100,7 @@ body {
   text-align: center;
 }
 
-.container-box input{
+.container-box input {
   width: 50%;
   padding: 10px;
   margin: 10px;
@@ -392,4 +392,19 @@ body {
   .left {
     display: none;
   }
+}
+
+.digitInputContainer {
+  display: flex;
+  justify-content: center;
+  border-radius: 5px;
+  padding-bottom: 5px;
+  background-color: var(--quaternary-color);
+}
+
+.digitInputContainer input {
+  all: unset;
+  color: var(--primary-color);
+  text-align: center;
+  width: 5vh;
 }
