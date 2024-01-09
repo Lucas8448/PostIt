@@ -6,6 +6,7 @@ const Client = ({ submitter, submitter_email }) => {
   const [sessionId, setSessionId] = useState('');
   const [idea, setIdea] = useState('');
   const [ideas, setIdeas] = useState([]);
+  const [sessionEntered, setSessionEntered] = useState(false);
 
   useEffect(() => {
     if (sessionId) {
@@ -20,6 +21,14 @@ const Client = ({ submitter, submitter_email }) => {
       });
     }
   }, [sessionId]);
+
+  const handleSessionSubmit = () => {
+    if (!sessionId) {
+      alert('Please enter a session ID.');
+      return;
+    }
+    setSessionEntered(true);
+  };
 
   const submitIdea = async () => {
     if (!sessionId) {
@@ -48,31 +57,41 @@ const Client = ({ submitter, submitter_email }) => {
   return (
     <div className="container">
       <div className="container-box">
-        <input
-          className="input"
-          type="text"
-          value={sessionId}
-          onChange={(e) => setSessionId(e.target.value)}
-          placeholder="Session ID"
-        />
-        <input
-          className="input"
-          type="text"
-          value={idea}
-          onChange={(e) => setIdea(e.target.value)}
-          placeholder="Enter your idea here"
-        />
-        <button className="button" onClick={submitIdea}>
-          Submit Idea
-        </button>
-        <div>
-          <h3>Submitted Ideas:</h3>
-          <ul>
-            {ideas.map((idea) => (
-              <li key={idea.id}>{idea.content}</li>
-            ))}
-          </ul>
-        </div>
+        {!sessionEntered ? (
+          <>
+            <input
+              className="input"
+              type="text"
+              value={sessionId}
+              onChange={(e) => setSessionId(e.target.value)}
+              placeholder="Session ID"
+            />
+            <button className="button" onClick={handleSessionSubmit}>
+              Enter Session
+            </button>
+          </>
+        ) : (
+          <>
+            <input
+              className="input"
+              type="text"
+              value={idea}
+              onChange={(e) => setIdea(e.target.value)}
+              placeholder="Enter your idea here"
+            />
+            <button className="button" onClick={submitIdea}>
+              Submit Idea
+            </button>
+            <div>
+              <h3>Submitted Ideas:</h3>
+              <ul>
+                {ideas.map((idea) => (
+                  <li key={idea.id}>{idea.content}</li>
+                ))}
+              </ul>
+            </div>
+          </>
+        )}
       </div>
     </div>
   );
