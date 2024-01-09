@@ -62,7 +62,7 @@ const Host = ({ owner, owner_email }) => {
   }, [owner]);
 
   return (
-    <div>
+    <div className="container">
       <h2>Host Panel</h2>
       <p>Session ID: {sessionId}</p>
       <div>
