@@ -15,24 +15,10 @@ import './App.css';
 
 const App = () => {
   const [user, setUser] = useState(null);
-  const navigate = useNavigate();
 
   const scrollToHome = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
-
-  useEffect(() => {
-    const unsubscribe = auth.onAuthStateChanged(user => {
-      if (user && (user.email || user.displayName)) {
-        setUser(user);
-      } else {
-        setUser(null);
-        navigate('/');
-      }
-    });
-
-    return () => unsubscribe();
-  }, [navigate]);
 
   const signInWithGoogle = async () => {
     try {
@@ -52,6 +38,7 @@ const App = () => {
 
   return (
     <Router>
+      <AuthHandler setUser={setUser} />
       <Analytics />
       <div className="app-nav">
         <div className="left">
@@ -87,6 +74,25 @@ const App = () => {
       </Routes>
     </Router>
   );
+};
+
+const AuthHandler = ({ setUser }) => {
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged(user => {
+      if (user && (user.email || user.displayName)) {
+        setUser(user);
+      } else {
+        setUser(null);
+        navigate('/');
+      }
+    });
+
+    return () => unsubscribe();
+  }, [setUser, navigate]);
+
+  return null;
 };
 
 const SignOutButton = () => {
