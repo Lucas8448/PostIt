@@ -17,8 +17,6 @@ const Host = () => {
     return numbers;
   }
 
-// :thumbs_up:
-
   useEffect(() => {
     const newPeer = new Peer(generateID());
     newPeer.on('open', id => {
