@@ -47,31 +47,32 @@ const Client = ({ submitter, submitter_email }) => {
 
   return (
     <div className="container">
-      <h2 className="header">User Panel</h2>
-      <input
-        className="input"
-        type="text"
-        value={sessionId}
-        onChange={(e) => setSessionId(e.target.value)}
-        placeholder="Session ID"
-      />
-      <input
-        className="input"
-        type="text"
-        value={idea}
-        onChange={(e) => setIdea(e.target.value)}
-        placeholder="Enter your idea here"
-      />
-      <button className="button" onClick={submitIdea}>
-        Submit Idea
-      </button>
-      <div>
-        <h3>Submitted Ideas:</h3>
-        <ul>
-          {ideas.map((idea) => (
-            <li key={idea.id}>{idea.content}</li>
-          ))}
-        </ul>
+      <div className="container-box">
+        <input
+          className="input"
+          type="text"
+          value={sessionId}
+          onChange={(e) => setSessionId(e.target.value)}
+          placeholder="Session ID"
+        />
+        <input
+          className="input"
+          type="text"
+          value={idea}
+          onChange={(e) => setIdea(e.target.value)}
+          placeholder="Enter your idea here"
+        />
+        <button className="button" onClick={submitIdea}>
+          Submit Idea
+        </button>
+        <div>
+          <h3>Submitted Ideas:</h3>
+          <ul>
+            {ideas.map((idea) => (
+              <li key={idea.id}>{idea.content}</li>
+            ))}
+          </ul>
+        </div>
       </div>
     </div>
   );
