@@ -139,6 +139,7 @@ body {
   align-items: center;
   justify-content: center;
   gap: 8px;
+  transition: width 0.5s ease;
 }
 
 .app-home-link {
@@ -223,7 +224,7 @@ body {
 }
 
 .headLine {
-  font-size: 30px;
+  font-size: 2em;
   font-weight: bold;
 }
 
@@ -258,6 +259,18 @@ body {
     padding-top: 0px;
     right: 0;
   }
+  body {
+    overflow-y: auto;
+  }
+  .app-container {
+    height: auto;
+  }
+}
+
+.about p {
+  color: var(--dark-tertiary);
+  font-size: 0.9em;
+  text-align: center;
 }
 
 .post-it {
