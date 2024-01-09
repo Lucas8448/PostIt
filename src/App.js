@@ -124,6 +124,19 @@ const Home = ({ user }) => {
           </p>
         </div>
       </div>
+      <div className="left2">
+        <div className="wrapper">
+          <div className="about">
+            <br></br>
+            <p>
+              Post It! is a web app that allows users to share ideas with others in real time.
+            </p>
+            <p>
+              It is built using React, Firebase, and Vercel.
+            </p>
+          </div>
+        </div>
+      </div>
     </div>
   );
 };
