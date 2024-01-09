@@ -1,77 +1,78 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import Peer from 'peerjs';
+import React, { useState, useEffect } from 'react';
+import { database } from './firebaseConfig';
+import { ref, onValue, set } from 'firebase/database';
 
-const Host = () => {
-  const [peerId, setPeerId] = useState('');
-  const [connections, setConnections] = useState([]);
-  const [data, setData] = useState('');
-
-  function generateID() {
-    let numbers = '';
-    for (let i = 0; i < 4; i++) {
-      numbers += Math.floor(Math.random() * 10);
-    }
-    return numbers;
+const generateSessionKey = () => {
+  const characters = '0123456789';
+  let result = '';
+  for (let i = 0; i < 6; i++) {
+    result += characters.charAt(Math.floor(Math.random() * characters.length));
   }
+  return result;
+};
 
-  const setupConnection = useCallback((connection) => {
-    setConnections(prevConnections => [...prevConnections, connection]);
-    connection.on('open', () => {
-      alert('A client has connected!');
-    });
-
-    connection.on('data', data => {
-      handleData(data, connection.peer);
-    });
-
-    connection.on('error', err => {
-      console.error('Connection error:', err);
-      setConnections(prevConnections => prevConnections.filter(c => c !== connection));
-    });
-
-    connection.on('close', () => {
-      setConnections(prevConnections => prevConnections.filter(c => c !== connection));
-    });
-  }, []);
+const Host = ({ owner, owner_email }) => {
+  const [sessionId, setSessionId] = useState('');
+  const [ideas, setIdeas] = useState([]);
 
   useEffect(() => {
-    const newPeer = new Peer("PostIt" + generateID());
-    newPeer.on('open', id => {
-      setPeerId(id.slice(6));
-    });
+    if (!owner) {
+      console.error('Owner is undefined');
+      return;
+    }
 
-    newPeer.on('connection', setupConnection);
+    const sessionKey = generateSessionKey();
+    setSessionId(sessionKey);
+    const sessionRef = ref(database, `sessions/${sessionKey}`);
+    set(sessionRef, { owner });
+
+    const ideasRef = ref(database, `sessions/${sessionKey}/ideas`);
+    const submittersRef = ref(database, `sessions/${sessionKey}/submitters`);
+
+    onValue(ideasRef, (ideasSnapshot) => {
+      onValue(submittersRef, (submittersSnapshot) => {
+        const ideasData = ideasSnapshot.val();
+        const submittersData = submittersSnapshot.val();
+        const loadedIdeas = [];
+
+        for (const key in ideasData) {
+          const idea = ideasData[key];
+          const submitterInfo = submittersData ? submittersData[key] : {};
+
+          loadedIdeas.push({
+            id: key,
+            content: idea.content,
+            submitter: submitterInfo ? submitterInfo.submitterUID : 'Unknown',
+            submitterEmail: submitterInfo ? submitterInfo.submitterEmail : 'Unknown',
+          });
+        }
+
+        setIdeas(loadedIdeas);
+      }, { onlyOnce: true });
+    });
 
     return () => {
-      connections.forEach(c => c.close());
+      const ideasRefOff = ref(database, `sessions/${sessionKey}/ideas`);
+      const submittersRefOff = ref(database, `sessions/${sessionKey}/submitters`);
+      onValue(ideasRefOff, () => { }, { onlyOnce: true });
+      onValue(submittersRefOff, () => { }, { onlyOnce: true });
     };
-  }, [setupConnection, connections]);
-
-  const sendData = () => {
-    const dataToSend = JSON.stringify({ data });
-    connections.forEach(conn => {
-      if (conn && conn.open) {
-        conn.send(dataToSend);
-      }
-    });
-    setData('');
-  };
-
-  const handleData = (data, id) => {
-    console.log(`Data received from ${id}:`, JSON.parse(data));
-  };
+  }, [owner]);
 
   return (
     <div>
       <h2>Host Panel</h2>
-      <p>Host ID: {peerId}</p>
-      <input
-        type="text"
-        value={data}
-        onChange={e => setData(e.target.value)}
-        placeholder="Enter your data"
-      />
-      <button onClick={sendData}>Send Data</button>
+      <p>Session ID: {sessionId}</p>
+      <div>
+        <h3>Ideas Submitted:</h3>
+        <ul>
+          {ideas.map((idea) => (
+            <li key={idea.id}>
+              {idea.submitter} (Email: {idea.submitterEmail}): {idea.content}
+            </li>
+          ))}
+        </ul>
+      </div>
     </div>
   );
 };
