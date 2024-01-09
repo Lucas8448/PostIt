@@ -28,7 +28,6 @@ body {
 }
 
 .app-nav {
-  position: fixed;
   background-color: var(--secondary-color);
   padding: 10px 20px;
   display: flex;
@@ -79,6 +78,34 @@ body {
   align-items: center;
   height: 100vh;
   flex-direction: column;
+}
+
+.container-box {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  flex-direction: column;
+}
+
+.container p {
+  font-size: 2em;
+  font-weight: bold;
+  text-align: center;
+}
+
+.container h2 {
+  font-size: 1em;
+  font-weight: bold;
+  text-align: center;
+}
+
+.container-box input{
+  width: 50%;
+  padding: 10px;
+  margin: 10px;
+  border-radius: 5px;
+  border: 1px solid var(--secondary-color);
 }
 
 .app-container img {
