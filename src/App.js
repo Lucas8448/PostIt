@@ -66,7 +66,7 @@ const App = () => {
             <Route 
               path="/host" 
               element={<Host 
-                owner={user.displayName} 
+                owner={user.uid} 
                 owner_email={user.email} 
               />} 
             />
