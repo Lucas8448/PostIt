@@ -14,6 +14,10 @@
   --quadrinary-color: #B2EBF2;
 }
 
+* {
+  transition: background-color 0.5s, color 0.5s;
+}
+
 .theme-container {
   position: fixed;
   bottom: 20px;
