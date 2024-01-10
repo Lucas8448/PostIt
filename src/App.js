@@ -51,14 +51,28 @@ const App = () => {
   return (
     <Router>
       <Analytics />
-      <div className="app-nav">
-        <div className="left">
-          <div>{user && user.displayName}</div>
-        </div>
-        <div className="center">
-        <div onClick={() => scrollToHome()}>Home</div>
-        </div>
-        {user && <SignOutButton />}
+      <div className="landing-page">
+        <header>
+          {!user && (
+              <div className="container">
+                <a href="#" className="logo">
+                  Post <b>it</b>
+                </a>
+              </div>
+            )}
+          <div className="container">
+            <div>{user && user.displayName}</div>
+              <ul className="links">
+                <li>
+                  <a href="#home">Home</a>
+                </li>
+                <li>
+                  <a href="#about">About us</a>
+                </li>
+              </ul>
+              {user && <SignOutButton />}
+          </div>
+        </header>
       </div>
       <Routes>
         {user ? (
@@ -105,38 +119,80 @@ const Home = ({ user }) => {
   
   return (
     <div className="app-container app-home-container" ref={mainPageHome}>
-      <img src="Icon.png" id="logo" alt="Post It logo" />
-      <div className="headLine">Welcome, {user && user.displayName}!</div>
-      <h5>Select one of the following to begin</h5>
-      <Link to="/host" className="app-link-button app-home-link">Host It<span className="material-symbols-outlined">dns</span></Link>
-      <Link to="/client" className="app-link-button2 app-home-link">Join It<span className="material-symbols-outlined">devices</span></Link>
-      <div className="right">
-        <div className="post-it">
-          <p className="sticky taped">
-            <strong>Post it</strong><br></br>
-          Fast and easy way to share ideas with others.
-          </p>
+      <section id="home">
+        <div className="background">
+          <img src="Background.png" />
         </div>
-        <div className="post-it">
-          <p className="note">
-          <strong>Post it</strong><br></br>
-          Express your creativity.
-          </p>
+        <div className="pin">
+          <img src="icon2.png" />
         </div>
-      </div>
-      <div className="left2">
-        <div className="wrapper">
-          <div className="about">
-            <br></br>
-            <p>
-              Post It! is a web app that allows users to share ideas with others in real time.
+        <div className="headLine">Welcome, {user && user.displayName}!</div>
+        <h5>Select one of the following to begin</h5>
+        <Link to="/client" className="app-link-button2 app-home-link">Join<span className="material-symbols-outlined">dns</span></Link>
+        <Link to="/host" className="app-link-button app-home-link">Host<span className="material-symbols-outlined">devices</span></Link>
+        <div className="right">
+          <div className="post-it">
+            <p className="sticky taped">
+              <strong>Join</strong><br></br>
+            Join a server to share and make ideas with others.
             </p>
-            <p>
-              It is built using React, Firebase, and Vercel.
+          </div>
+          <div className="post-it">
+            <p className="note">
+            <strong>Host</strong><br></br>
+            Host a server to share and make ideas with others.
             </p>
           </div>
         </div>
-      </div>
+      </section>
+      <section id="about">
+        <div className="wrapper">
+          <div className="picture">
+            <div className="image">
+              <img src="About.png" />
+            </div>
+          </div>
+          <div className="text">
+            <span className="about-header">About us</span>
+            <h2>
+              About <span className="blue">Our Company</span>
+            </h2>
+            <p>
+              Our solution Post-it is to empower individuals and teams to freely
+              express and develop their ideas in an anonymous and collaborative
+              environment.
+            </p>
+          </div>
+        </div>
+      </section>
+      <footer>
+        {/* Site footer */}
+        <footer className="site-footer">
+          <div className="container">
+            <div className="row">
+              <div className="row3">
+                <h6>Quick Links</h6>
+                <ul className="footer-links">
+                  <li>
+                    <a href="#">Guide</a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <hr />
+          </div>
+          <div className="container">
+            <div className="row">
+              <div className="row4">
+                <p className="copyright-text">
+                  Copyright owners Lucas Bateson, Max T.Aarre, Nicklas F.H &amp;
+                  Ines T.© 2024 All Rights Reserved
+                </p>
+              </div>
+            </div>
+          </div>
+        </footer>
+      </footer>
     </div>
   );
 };
@@ -144,16 +200,98 @@ const Home = ({ user }) => {
 const SignIn = ({ signInWithGoogle, signInWithGithub }) => {
   return (
     <div className="app-container app-sign-in-container">
-      <img src="Icon.png" alt="Post It logo" />
-      <h1>Post It!</h1>
-      <button onClick={signInWithGoogle} className="app-link-button app-google-sign-in-button">
-        <img src="google.png" alt="Google logo" />
-        Sign in with Google
-      </button>
-      <button onClick={signInWithGithub} className="app-link-button app-github-sign-in-button">
-        <img src="github.png" alt="Github logo" />
-        Sign in with Github
-      </button>
+      <div className="landing-page">
+        <section id="home">
+          <div className="content">
+            <div className="container">
+              <div className="info">
+                <div className="holder">
+                  <img
+                    src="FastB.png"
+                    alt="Fast and easy"
+                    width="100px"
+                    height="100px"
+                  />
+                  <img
+                    src="FastG.png"
+                    alt="Fast and easy"
+                    width="100px"
+                    height="100px"
+                  />
+                </div>
+                <h1>Fast and easy</h1>
+                <p>
+                  Simple yet effective brainstorming. Easy join and hosting to
+                  express and share your ideas with others.
+                </p>
+                <h4>Sign in with:</h4>
+                <div className="buttons">
+                <button onClick={signInWithGoogle} className="app-link-button3 app-google-sign-in-button">
+                    <img src="google.png" alt="Google logo" />
+                    Google
+                  </button>
+                  <p>or</p>
+                  <button onClick={signInWithGithub} className="app-link-button3 app-github-sign-in-button">
+                    <img src="github.png" alt="Github logo" />
+                    Github
+                  </button>
+                </div>
+              </div>
+              <div className="image">
+                <img src="Logo.png" />
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+      <section id="about">
+        <div className="wrapper">
+          <div className="picture">
+            <div className="image">
+              <img src="About.png" />
+            </div>
+          </div>
+          <div className="text">
+            <span className="about-header">About us</span>
+            <h2>
+              About <span className="blue">Our Company</span>
+            </h2>
+            <p>
+              Our solution Post-it is to empower individuals and teams to freely
+              express and develop their ideas in an anonymous and collaborative
+              environment.
+            </p>
+          </div>
+        </div>
+      </section>
+      <footer>
+        {/* Site footer */}
+        <footer className="site-footer">
+          <div className="container">
+            <div className="row">
+              <div className="row3">
+                <h6>Quick Links</h6>
+                <ul className="footer-links">
+                  <li>
+                    <a href="#">Guide</a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <hr />
+          </div>
+          <div className="container">
+            <div className="row">
+              <div className="row4">
+                <p className="copyright-text">
+                  Copyright owners Lucas Bateson, Max T.Aarre, Nicklas F.H &amp;
+                  Ines T.© 2024 All Rights Reserved
+                </p>
+              </div>
+            </div>
+          </div>
+        </footer>
+      </footer>
     </div>
   );
 };
