@@ -392,6 +392,9 @@ ul {
       max-width: 100%;
       width: 350px;
   }
+  #home .background img {
+  display: none;
+}
 }
 
 @media (max-height: 500px) {
@@ -611,10 +614,6 @@ margin:0
   width: 700px;
   height: 700px;
   margin-left: -90%;
-}
-
-#home .background img {
-  display: none;
 }
 
 @media (max-width:1200px) {
