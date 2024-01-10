@@ -1,9 +1,9 @@
 :root {
-  --primary-color: #17252a;
-  --secondary-color: #2b7a78;
-  --tertiary-color: #3aafa9;
-  --quaternary-color: #feffff;
-  --dark-tertiary: #def2f1;
+  --primary-color: #142F43;
+  --secondary-color: #1B5E5E;
+  --tertiary-color: #3C9992;
+  --quaternary-color: #FFFFFF;
+  --dark-tertiary: #B2EBF2;
 }
 
 button {
