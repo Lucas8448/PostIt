@@ -12,6 +12,7 @@ import { Analytics } from '@vercel/analytics/react';
 import Host from './Host';
 import Client from './Client';
 import './App.css';
+import ThemeToggle from './components/ThemeToggle';
 
 const App = () => {
   const [user, setUser] = useState(null);
@@ -19,18 +20,6 @@ const App = () => {
   const scrollToHome = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
-
-  useEffect(() => {
-    const unsubscribe = auth.onAuthStateChanged(user => {
-      if (user) {
-        setUser(user);
-      } else {
-        setUser(null);
-      }
-    });
-
-    return () => unsubscribe();
-  }, []);
 
   const signInWithGoogle = async () => {
     try {
@@ -50,7 +39,9 @@ const App = () => {
 
   return (
     <Router>
+      <AuthHandler setUser={setUser} />
       <Analytics />
+      <ThemeToggle />
       <div className="landing-page">
         <header>
           {!user && (
@@ -101,6 +92,25 @@ const App = () => {
   );
 };
 
+const AuthHandler = ({ setUser }) => {
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged(user => {
+      if (user && (user.email || user.displayName)) {
+        setUser(user);
+      } else {
+        setUser(null);
+        navigate('/');
+      }
+    });
+
+    return () => unsubscribe();
+  }, [setUser, navigate]);
+
+  return null;
+};
+
 const SignOutButton = () => {
   const navigate = useNavigate();
 
@@ -116,7 +126,6 @@ const SignOutButton = () => {
 const Home = ({ user }) => {
   const mainPageHome = useRef(null);
 
-  
   return (
     <div className="app-container app-home-container" ref={mainPageHome}>
       <section id="home">

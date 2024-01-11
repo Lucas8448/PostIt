@@ -7,6 +7,33 @@
   --dark-tertiary: #def2f1;
 }
 
+[theme="light"] {
+  --primary-color: #FFFFFF;
+  --secondary-color: #1B5E5E;
+  --tertiary-color: #3C9992;
+  --quaternary-color: #142F43;
+  --quadrinary-color: #B2EBF2;
+}
+
+* {
+  transition: background-color 0.5s, color 0.5s;
+}
+
+.theme-container {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 1000;
+  cursor: pointer;
+}
+
+.icon-circle {
+  border-radius: 50%;
+  padding: 10px;
+  border: 2px solid var(--quaternary-color);
+  background-color: var(--primary-color);
+}
+
 * {
   box-sizing: border-box;
 }
