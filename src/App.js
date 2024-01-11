@@ -12,27 +12,14 @@ import { Analytics } from '@vercel/analytics/react';
 import Host from './Host';
 import Client from './Client';
 import './App.css';
+import ThemeToggle from './components/ThemeToggle';
 
 const App = () => {
   const [user, setUser] = useState(null);
-  const navigate = useNavigate();
 
   const scrollToHome = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
-
-  useEffect(() => {
-    const unsubscribe = auth.onAuthStateChanged(user => {
-      if (user && (user.email || user.displayName)) {
-        setUser(user);
-      } else {
-        setUser(null);
-        navigate('/');
-      }
-    });
-
-    return () => unsubscribe();
-  }, [navigate]);
 
   const signInWithGoogle = async () => {
     try {
@@ -52,13 +39,14 @@ const App = () => {
 
   return (
     <Router>
+      <AuthHandler setUser={setUser} />
       <Analytics />
+      <ThemeToggle />
       <div className="app-nav">
         <div className="left">
           <div>{user && user.displayName}</div>
         </div>
         <div className="center">
-        <div onClick={() => scrollToHome()}>Home</div>
         </div>
         {user && <SignOutButton />}
       </div>
@@ -87,6 +75,25 @@ const App = () => {
       </Routes>
     </Router>
   );
+};
+
+const AuthHandler = ({ setUser }) => {
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged(user => {
+      if (user && (user.email || user.displayName)) {
+        setUser(user);
+      } else {
+        setUser(null);
+        navigate('/');
+      }
+    });
+
+    return () => unsubscribe();
+  }, [setUser, navigate]);
+
+  return null;
 };
 
 const SignOutButton = () => {
@@ -123,6 +130,19 @@ const Home = ({ user }) => {
           <strong>Post it</strong><br></br>
           Express your creativity.
           </p>
+        </div>
+      </div>
+      <div className="left2">
+        <div className="wrapper">
+          <div className="about">
+            <br></br>
+            <p>
+              Post It! is a web app that allows users to share ideas with others in real time.
+            </p>
+            <p>
+              It is built using React, Firebase, and Vercel.
+            </p>
+          </div>
         </div>
       </div>
     </div>
