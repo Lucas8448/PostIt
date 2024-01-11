@@ -63,17 +63,19 @@ const Host = ({ owner, owner_email }) => {
 
   return (
     <div className="container">
-      <h2>Host Panel</h2>
-      <p>Session ID: {sessionId}</p>
-      <div>
-        <h3>Ideas Submitted:</h3>
-        <ul>
-          {ideas.map((idea) => (
-            <li key={idea.id}>
-              {idea.submitter} (Email: {idea.submitterEmail}): {idea.content}
-            </li>
-          ))}
-        </ul>
+      <div className="container-box">
+        <h2>Host Panel</h2>
+        <p>Session ID: {sessionId}</p>
+        <div>
+          <h3>Ideas Submitted:</h3>
+          <ul>
+            {ideas.map((idea) => (
+              <li key={idea.id}>
+                {idea.submitter} (Email: {idea.submitterEmail}): {idea.content}
+              </li>
+            ))}
+          </ul>
+        </div>
       </div>
     </div>
   );
