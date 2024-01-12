@@ -12,7 +12,6 @@ import { Analytics } from '@vercel/analytics/react';
 import Host from './Host';
 import Client from './Client';
 import './App.css';
-import ThemeToggle from './components/ThemeToggle';
 
 const App = () => {
   const [user, setUser] = useState(null);
@@ -41,7 +40,6 @@ const App = () => {
     <Router>
       <AuthHandler setUser={setUser} />
       <Analytics />
-      <ThemeToggle />
       <div className="landing-page">
         <header>
           {!user && (
