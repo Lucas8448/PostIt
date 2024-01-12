@@ -11,6 +11,7 @@ import { signInWithPopup } from "firebase/auth";
 import { Analytics } from '@vercel/analytics/react';
 import Host from './Host';
 import Client from './Client';
+import DatabaseSchema from './resources/DatabaseSchemas';
 import './App.css';
 
 const App = () => {
@@ -44,7 +45,7 @@ const App = () => {
         <header>
           {!user && (
               <div className="container">
-                <a href="#" className="logo">
+                <a href="/" className="logo">
                   Post <b>it</b>
                 </a>
               </div>
@@ -79,6 +80,10 @@ const App = () => {
                 submitter={user.displayName} 
                 submitter_email={user.email} 
               />} 
+            />
+            <Route 
+              path="/database"
+              element={<DatabaseSchema />}
             />
             <Route path="/" element={<Home user={user} />} />
           </>
@@ -128,10 +133,10 @@ const Home = ({ user }) => {
     <div className="app-container app-home-container" ref={mainPageHome}>
       <section id="home">
         <div className="background">
-          <img src="Background.png" />
+          <img src="Background.png" alt="background"/>
         </div>
         <div className="pin">
-          <img src="icon2.png" />
+          <img src="icon2.png" alt="icon"/>
         </div>
         <div className="headLine">Welcome, {user && user.displayName}!</div>
         <h5>Select one of the following to begin</h5>
@@ -156,7 +161,7 @@ const Home = ({ user }) => {
         <div className="wrapper">
           <div className="picture">
             <div className="image">
-              <img src="About.png" />
+              <img src="About.png" alt="about img"/>
             </div>
           </div>
           <div className="text">
@@ -181,7 +186,7 @@ const Home = ({ user }) => {
                 <h6>Quick Links</h6>
                 <ul className="footer-links">
                   <li>
-                    <a href="#">Guide</a>
+                    <a href="/#">Guide</a>
                   </li>
                 </ul>
               </div>
