@@ -782,10 +782,42 @@ margin:20px 0
   flex-direction: column;
 }
 
-.container-box input {
-  width: 50%;
-  padding: 10px;
+.container-box .control {
+  margin-top: -400px;
+}
+
+.container-box .control input {
+  width: 100%;
+  padding: 10px 20px;
   margin: 10px;
   border-radius: 5px;
   border: 1px solid var(--secondary-color);
+  display: flex;
+}
+
+
+.ideas-container {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  flex-direction: column;
+}
+
+.ideas {
+  position: absolute;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  align-items: center;
+  margin: 10px;
+  padding: 10px;
+  border-radius: 5px;
+  gap: 10px;
+}
+
+.idea-box {
+  background: var(--bright-primary-color);
+  padding: 10px 10px;
+  margin-bottom: 10px;
+  border-radius: 5px;
 }
