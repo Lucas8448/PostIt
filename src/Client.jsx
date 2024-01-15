@@ -80,25 +80,27 @@ const Client = ({ submitter, submitter_email }) => {
             </>
           ) : (
             <>
-              <input
-                className="input"
-                type="text"
-                value={idea}
-                onChange={(e) => setIdea(e.target.value)}
-                placeholder="Enter your idea here"
-              />
-              <button className="button" onClick={submitIdea}>
-                Submit Idea
-              </button>
               <div className="ideas-container">
-              <div className="ideas">
-                {ideas.map((idea) => (
-                  <div key={idea.id} className="idea-box">
-                    {idea.content}
-                  </div>
-                ))}
+                <div className="ideas">
+                  {ideas.map((idea) => (
+                    <div key={idea.id} className="idea-box">
+                      {idea.content}
+                    </div>
+                  ))}
+                </div>
               </div>
-            </div>
+              <div className="add-note-container">
+                <input
+                  className="input-box"
+                  type="text"
+                  value={idea}
+                  onChange={(e) => setIdea(e.target.value)}
+                  placeholder="Enter your idea here"
+                />
+                <button className="submit-idea" onClick={submitIdea}>
+                  Submit Idea
+                </button>
+              </div>
             </>
           )}
         </div>
