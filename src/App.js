@@ -37,30 +37,59 @@ const App = () => {
     }
   };
 
-  return (
+return (
     <Router>
       <AuthHandler setUser={setUser} />
       <Analytics />
-      <div className="bg-gray-100 min-h-screen">
-        <header className="bg-blue-500 p-4">
-          {!user && (
-            <div className="text-white">
-              <Link to="/">Post it</Link>
+      <div className="min-h-screen bg-gray-100">
+        <nav className="bg-gray-800">
+          <div className="px-2 mx-auto max-w-7xl sm:px-6 lg:px-8">
+            <div className="relative flex items-center justify-between h-16">
+              <div className="absolute inset-y-0 left-0 flex items-center sm:hidden">
+                <button type="button" className="relative inline-flex items-center justify-center p-2 text-gray-400 rounded-md hover:bg-gray-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white" aria-controls="mobile-menu" aria-expanded="false">
+                  <span className="absolute -inset-0.5"></span>
+                  <span className="sr-only">Open main menu</span>
+                  <svg className="block w-6 h-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+                  </svg>
+                  <svg className="hidden w-6 h-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              </div>
+              <div className="flex items-center justify-center flex-1 sm:items-stretch sm:justify-start">
+                <div className="flex items-center flex-shrink-0">
+                  <img className="w-auto h-8" src="icon.png" alt="PostIt" />
+                </div>
+                <div className="hidden sm:ml-6 sm:block">
+                  <div className="flex space-x-4">
+                    <a href="#home" className="px-3 py-2 text-sm font-medium text-white bg-gray-900 rounded-md" aria-current="page">Home</a>
+                    <a href="#about" className="px-3 py-2 text-sm font-medium text-gray-300 rounded-md hover:bg-gray-700 hover:text-white">About</a>
+                  </div>
+                </div>
+              </div>
+              <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
+
+                <div className="relative ml-3">
+                  <div>
+                    <img
+                      className="w-8 h-8 rounded-full"
+                      src={user && user.photoURL ? user.photoURL : "/default.png"}
+                      alt=""
+                    />
+                  </div>
+                </div>
+              </div>
             </div>
-          )}
-          <div className="text-white">
-            <div>{user && user.displayName}</div>
-            <ul className="flex space-x-4">
-              <li>
-                <a href="#home">Home</a>
-              </li>
-              <li>
-                <a href="#about">About us</a>
-              </li>
-            </ul>
-            {user && <SignOutButton />}
           </div>
-        </header>
+
+          <div className="sm:hidden" id="mobile-menu">
+            <div className="px-2 pt-2 pb-3 space-y-1">
+              <a href="#home" className="block px-3 py-2 text-base font-medium text-white bg-gray-900 rounded-md" aria-current="page">Home</a>
+              <a href="#about" className="block px-3 py-2 text-base font-medium text-gray-300 rounded-md hover:bg-gray-700 hover:text-white">About</a>
+            </div>
+          </div>
+        </nav>
         <Routes>
           {user ? (
             <>
@@ -89,161 +118,46 @@ const App = () => {
 
 const AuthHandler = ({ setUser }) => {
   const navigate = useNavigate();
-
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged(user => {
-      if (user && (user.email || user.displayName)) {
-        setUser(user);
-      } else {
-        setUser(null);
+      setUser(user);
+      if (user) {
         navigate('/');
       }
     });
-
-    return () => unsubscribe();
+    return unsubscribe;
   }, [setUser, navigate]);
-
   return null;
 };
 
-const SignOutButton = () => {
-  const navigate = useNavigate();
-
-  const signOut = () => {
-    auth.signOut().then(() => navigate('/'));
-  };
-
-  return (
-    <button onClick={signOut} className="bg-red-500 text-white px-2 py-1 rounded-md">
-      Sign out
-    </button>
-  );
-}
-
 const Home = ({ user }) => {
-  const mainPageHome = useRef(null);
-
   return (
-    <div ref={mainPageHome}>
-      <section id="home">
-        <div>Welcome, {user && user.displayName}!</div>
-        <h5 className="text-xl">Select one of the following to begin</h5>
-        <Link to="/client" className="text-blue-500 hover:underline">Join</Link>
-        <Link to="/host" className="text-blue-500 hover:underline">Host</Link>
-        <div className="flex space-x-4 mt-4">
-          <div>
-            <p>
-              <strong>Join</strong><br></br>
-              Join a server to share and make ideas with others.
-            </p>
-          </div>
-          <div>
-            <p>
-              <strong>Host</strong><br></br>
-              Host a server to share and make ideas with others.
-            </p>
-          </div>
+    <div className="p-4">
+      <h2 className="mb-4 text-xl font-bold">Welcome, {user.displayName}!</h2>
+      <div className="space-y-4">
+        <p>Choose an option to get started:</p>
+        <div className="flex space-x-4">
+          <a href="/client" className="block px-4 py-2 bg-blue-500 rounded hover:bg-blue-600">Join</a>
+          <a href="/host" className="block px-4 py-2 bg-green-500 rounded hover:bg-green-600">Host</a>
         </div>
-      </section>
-      <section id="about">
-      </section>
-      <footer className="bg-blue-500 text-white p-4">
-        {/* Site footer */}
-        <div className="flex justify-between">
-          <div>
-            <div>
-              <h6 className="font-semibold">Quick Links</h6>
-              <ul className="space-y-2">
-                <li>
-                  <a href="/">Guide</a>
-                </li>
-              </ul>
-            </div>
-          </div>
-          <div>
-            <div>
-              <p>
-                Copyright owners Lucas Bateson, Max T.Aarre, Nicklas F.H &amp;
-                Ines T.© 2024 All Rights Reserved
-              </p>
-            </div>
-          </div>
-        </div>
-      </footer>
-    </div>
-  );
-};
-
-const SignIn = ({ signInWithGoogle, signInWithGithub }) => {
-  return (
-    <div>
-      <div>
-        <section id="home">
-          <div className="flex items-center space-x-4">
-            <div>
-              <div>
-                <h1 className="text-4xl font-semibold">Fast and easy</h1>
-                <p>
-                  Simple yet effective brainstorming. Easy join and hosting to
-                  express and share your ideas with others.
-                </p>
-                <h4 className="text-lg font-semibold mt-4">Sign in with:</h4>
-                <div className="flex space-x-4 mt-2">
-                  <button onClick={signInWithGoogle} className="bg-red-500 text-white px-2 py-1 rounded-md">
-                    <img src="google.png" alt="Google logo" className="w-5 h-5 mr-1" />
-                    Google
-                  </button>
-                  <p>or</p>
-                  <button onClick={signInWithGithub} className="bg-gray-800 text-white px-2 py-1 rounded-md">
-                    <img src="github.png" alt="Github logo" className="w-5 h-5 mr-1" />
-                    Github
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
       </div>
-      <section id="about">
-        <div className="flex items-center space-x-4">
-          <div>
-            <span>About us</span>
-            <h2 className="text-2xl font-semibold">
-              About <span>Our Company</span>
-            </h2>
-            <p>
-              Our solution Post-it is to empower individuals and teams to freely
-              express and develop their ideas in an anonymous and collaborative
-              environment.
-            </p>
-          </div>
-        </div>
-      </section>
-      <footer className="bg-blue-500 text-white p-4">
-        {/* Site footer */}
-        <div className="flex justify-between">
-          <div>
-            <div>
-              <h6 className="font-semibold">Quick Links</h6>
-              <ul className="space-y-2">
-                <li>
-                  <a href="#">Guide</a>
-                </li>
-              </ul>
-            </div>
-          </div>
-          <div>
-            <div>
-              <p>
-                Copyright owners Lucas Bateson, Max T.Aarre, Nicklas F.H &amp;
-                Ines T.© 2024 All Rights Reserved
-              </p>
-            </div>
-          </div>
-        </div>
-      </footer>
     </div>
   );
 };
+
+const SignIn = ({ signInWithGoogle, signInWithGithub }) => (
+  <div className="flex items-center justify-center min-h-screen">
+    <div className="text-center">
+      <h1 className="mb-8 text-4xl">Fast and easy</h1>
+      <p className="mb-6">Simple yet effective brainstorming.</p>
+      <button onClick={signInWithGoogle} className="inline-flex items-center px-4 py-2 mr-4 bg-red-600 rounded hover:bg-red-700">
+        <img src="google.png" alt="Google" className="mr-2" /> Google
+      </button>
+      <button onClick={signInWithGithub} className="inline-flex items-center px-4 py-2 bg-gray-700 rounded hover:bg-gray-600">
+        <img src="github.png" alt="GitHub" className="mr-2" /> GitHub
+      </button>
+    </div>
+  </div>
+);
 
 export default App;
