@@ -1,9 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { database } from './firebaseConfig';
 import { ref, push, onValue, set } from 'firebase/database';
+import DigitInput from './components/DigitInput';
 
 const Client = ({ submitter, submitter_email }) => {
   const [sessionId, setSessionId] = useState('');
+  const [digitCode, setDigitCode] = useState('');
   const [idea, setIdea] = useState('');
   const [ideas, setIdeas] = useState([]);
   const [sessionEntered, setSessionEntered] = useState(false);
@@ -21,13 +23,24 @@ const Client = ({ submitter, submitter_email }) => {
       });
     }
   }, [sessionId]);
-
-  const handleSessionSubmit = () => {
-    if (!sessionId) {
+  
+  const handleSessionSubmit = useCallback(() => {
+    if (!digitCode) {
       alert('Please enter a session ID.');
       return;
     }
+    setSessionId(digitCode);
     setSessionEntered(true);
+  }, [digitCode]);
+  
+  useEffect(() => {
+    if (digitCode.length === 6) {
+      handleSessionSubmit();
+    }
+  }, [digitCode, handleSessionSubmit]);
+
+  const handleDigitsChange = (digits) => {
+    setDigitCode(digits);
   };
 
   const submitIdea = async () => {
@@ -60,38 +73,34 @@ const Client = ({ submitter, submitter_email }) => {
         <div className='control'>
           {!sessionEntered ? (
             <>
-              <input
-                className="input"
-                type="text"
-                value={sessionId}
-                onChange={(e) => setSessionId(e.target.value)}
-                placeholder="Session ID"
-              />
+              <DigitInput onDigitsChange={handleDigitsChange} digitCount={6} />
               <button className="button" onClick={handleSessionSubmit}>
                 Enter Session
               </button>
             </>
           ) : (
             <>
-              <input
-                className="input"
-                type="text"
-                value={idea}
-                onChange={(e) => setIdea(e.target.value)}
-                placeholder="Enter your idea here"
-              />
-              <button className="button" onClick={submitIdea}>
-                Submit Idea
-              </button>
               <div className="ideas-container">
-              <div className="ideas">
-                {ideas.map((idea) => (
-                  <div key={idea.id} className="idea-box">
-                    {idea.content}
-                  </div>
-                ))}
+                <div className="ideas">
+                  {ideas.map((idea) => (
+                    <div key={idea.id} className="idea-box">
+                      {idea.content}
+                    </div>
+                  ))}
+                </div>
               </div>
-            </div>
+              <div className="add-note-container">
+                <input
+                  className="input-box"
+                  type="text"
+                  value={idea}
+                  onChange={(e) => setIdea(e.target.value)}
+                  placeholder="Enter your idea here"
+                />
+                <button className="submit-idea" onClick={submitIdea}>
+                  Submit Idea
+                </button>
+              </div>
             </>
           )}
         </div>
