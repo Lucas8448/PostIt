@@ -90,7 +90,6 @@ const Client = ({ submitter, submitter_email }) => {
                   />
                 ))}
               </div>
-              <div className="background-container"></div>
               <div className="add-note-container">
                 <input
                   className="input-box"
