@@ -12,7 +12,7 @@ import { Analytics } from '@vercel/analytics/react';
 import Host from './Host';
 import Client from './Client';
 import DatabaseSchema from './resources/DatabaseSchemas';
-import './App.css';
+import './App.css'; 
 
 const App = () => {
   const [user, setUser] = useState(null);
@@ -41,56 +41,48 @@ const App = () => {
     <Router>
       <AuthHandler setUser={setUser} />
       <Analytics />
-      <div className="landing-page">
-        <header>
+      <div className="bg-gray-100 min-h-screen">
+        <header className="bg-blue-500 p-4">
           {!user && (
-              <div className="container">
-                <a href="/" className="logo">
-                  Post <b>it</b>
-                </a>
-              </div>
-            )}
-          <div className="container">
+            <div className="text-white">
+              <Link to="/">Post it</Link>
+            </div>
+          )}
+          <div className="text-white">
             <div>{user && user.displayName}</div>
-              <ul className="links">
-                <li>
-                  <a href="#home">Home</a>
-                </li>
-                <li>
-                  <a href="#about">About us</a>
-                </li>
-              </ul>
-              {user && <SignOutButton />}
+            <ul className="flex space-x-4">
+              <li>
+                <a href="#home">Home</a>
+              </li>
+              <li>
+                <a href="#about">About us</a>
+              </li>
+            </ul>
+            {user && <SignOutButton />}
           </div>
         </header>
+        <Routes>
+          {user ? (
+            <>
+              <Route
+                path="/host"
+                element={<Host owner={user.uid} owner_email={user.email} />}
+              />
+              <Route
+                path="/client"
+                element={<Client submitter={user.displayName} submitter_email={user.email} />}
+              />
+              <Route
+                path="/database"
+                element={<DatabaseSchema />}
+              />
+              <Route path="/" element={<Home user={user} />} />
+            </>
+          ) : (
+            <Route path="/" element={<SignIn signInWithGoogle={signInWithGoogle} signInWithGithub={signInWithGithub} />} />
+          )}
+        </Routes>
       </div>
-      <Routes>
-        {user ? (
-          <>
-            <Route 
-              path="/host" 
-              element={<Host 
-                owner={user.uid} 
-                owner_email={user.email} 
-              />} 
-            />
-            <Route 
-              path="/client" 
-              element={<Client 
-                submitter={user.displayName} 
-                submitter_email={user.email} 
-              />} 
-            />
-            <Route 
-              path="/database"
-              element={<DatabaseSchema />}
-            />
-            <Route path="/" element={<Home user={user} />} />
-          </>
-        ) : (
-          <Route path="/" element={<SignIn signInWithGoogle={signInWithGoogle} signInWithGithub={signInWithGithub}/>} />
-        )}
-      </Routes>
     </Router>
   );
 };
@@ -122,7 +114,9 @@ const SignOutButton = () => {
   };
 
   return (
-    <button onClick={signOut} className="app-button">Sign out<span className="material-symbols-outlined">logout</span></button>
+    <button onClick={signOut} className="bg-red-500 text-white px-2 py-1 rounded-md">
+      Sign out
+    </button>
   );
 }
 
@@ -130,80 +124,51 @@ const Home = ({ user }) => {
   const mainPageHome = useRef(null);
 
   return (
-    <div className="app-container app-home-container" ref={mainPageHome}>
+    <div ref={mainPageHome}>
       <section id="home">
-        <div className="background">
-          <img src="Background.png" alt="background"/>
-        </div>
-        <div className="pin">
-          <img src="icon2.png" alt="icon"/>
-        </div>
-        <div className="headLine">Welcome, {user && user.displayName}!</div>
-        <h5>Select one of the following to begin</h5>
-        <Link to="/client" className="app-link-button2 app-home-link">Join<span className="material-symbols-outlined">dns</span></Link>
-        <Link to="/host" className="app-link-button app-home-link">Host<span className="material-symbols-outlined">devices</span></Link>
-        <div className="right">
-          <div className="post-it">
-            <p className="sticky taped">
+        <div>Welcome, {user && user.displayName}!</div>
+        <h5 className="text-xl">Select one of the following to begin</h5>
+        <Link to="/client" className="text-blue-500 hover:underline">Join</Link>
+        <Link to="/host" className="text-blue-500 hover:underline">Host</Link>
+        <div className="flex space-x-4 mt-4">
+          <div>
+            <p>
               <strong>Join</strong><br></br>
-            Join a server to share and make ideas with others.
+              Join a server to share and make ideas with others.
             </p>
           </div>
-          <div className="post-it">
-            <p className="note">
-            <strong>Host</strong><br></br>
-            Host a server to share and make ideas with others.
+          <div>
+            <p>
+              <strong>Host</strong><br></br>
+              Host a server to share and make ideas with others.
             </p>
           </div>
         </div>
       </section>
       <section id="about">
-        <div className="wrapper">
-          <div className="picture">
-            <div className="image">
-              <img src="About.png" alt="about img"/>
+      </section>
+      <footer className="bg-blue-500 text-white p-4">
+        {/* Site footer */}
+        <div className="flex justify-between">
+          <div>
+            <div>
+              <h6 className="font-semibold">Quick Links</h6>
+              <ul className="space-y-2">
+                <li>
+                  <a href="/">Guide</a>
+                </li>
+              </ul>
             </div>
           </div>
-          <div className="text">
-            <span className="about-header">About us</span>
-            <h2>
-              About <span className="blue">Our Company</span>
-            </h2>
-            <p>
-              Our solution Post-it is to empower individuals and teams to freely
-              express and develop their ideas in an anonymous and collaborative
-              environment.
-            </p>
+          <div>
+            <div>
+              <p>
+                Copyright owners Lucas Bateson, Max T.Aarre, Nicklas F.H &amp;
+                Ines T.© 2024 All Rights Reserved
+              </p>
+            </div>
           </div>
         </div>
-      </section>
-      <footer>
-        {/* Site footer */}
-        <footer className="site-footer">
-          <div className="container">
-            <div className="row">
-              <div className="row3">
-                <h6>Quick Links</h6>
-                <ul className="footer-links">
-                  <li>
-                    <a href="/#">Guide</a>
-                  </li>
-                </ul>
-              </div>
-            </div>
-            <hr />
-          </div>
-          <div className="container">
-            <div className="row">
-              <div className="row4">
-                <p className="copyright-text">
-                  Copyright owners Lucas Bateson, Max T.Aarre, Nicklas F.H &amp;
-                  Ines T.© 2024 All Rights Reserved
-                </p>
-              </div>
-            </div>
-          </div>
-        </footer>
       </footer>
     </div>
   );
@@ -211,62 +176,40 @@ const Home = ({ user }) => {
 
 const SignIn = ({ signInWithGoogle, signInWithGithub }) => {
   return (
-    <div className="app-container app-sign-in-container">
-      <div className="landing-page">
+    <div>
+      <div>
         <section id="home">
-          <div className="content">
-            <div className="container">
-              <div className="info">
-                <div className="holder">
-                  <img
-                    src="FastB.png"
-                    alt="Fast and easy"
-                    width="100px"
-                    height="100px"
-                  />
-                  <img
-                    src="FastG.png"
-                    alt="Fast and easy"
-                    width="100px"
-                    height="100px"
-                  />
-                </div>
-                <h1>Fast and easy</h1>
+          <div className="flex items-center space-x-4">
+            <div>
+              <div>
+                <h1 className="text-4xl font-semibold">Fast and easy</h1>
                 <p>
                   Simple yet effective brainstorming. Easy join and hosting to
                   express and share your ideas with others.
                 </p>
-                <h4>Sign in with:</h4>
-                <div className="buttons">
-                <button onClick={signInWithGoogle} className="app-link-button3 app-google-sign-in-button">
-                    <img src="google.png" alt="Google logo" />
+                <h4 className="text-lg font-semibold mt-4">Sign in with:</h4>
+                <div className="flex space-x-4 mt-2">
+                  <button onClick={signInWithGoogle} className="bg-red-500 text-white px-2 py-1 rounded-md">
+                    <img src="google.png" alt="Google logo" className="w-5 h-5 mr-1" />
                     Google
                   </button>
                   <p>or</p>
-                  <button onClick={signInWithGithub} className="app-link-button3 app-github-sign-in-button">
-                    <img src="github.png" alt="Github logo" />
+                  <button onClick={signInWithGithub} className="bg-gray-800 text-white px-2 py-1 rounded-md">
+                    <img src="github.png" alt="Github logo" className="w-5 h-5 mr-1" />
                     Github
                   </button>
                 </div>
-              </div>
-              <div className="image">
-                <img src="Logo.png" />
               </div>
             </div>
           </div>
         </section>
       </div>
       <section id="about">
-        <div className="wrapper">
-          <div className="picture">
-            <div className="image">
-              <img src="About.png" />
-            </div>
-          </div>
-          <div className="text">
-            <span className="about-header">About us</span>
-            <h2>
-              About <span className="blue">Our Company</span>
+        <div className="flex items-center space-x-4">
+          <div>
+            <span>About us</span>
+            <h2 className="text-2xl font-semibold">
+              About <span>Our Company</span>
             </h2>
             <p>
               Our solution Post-it is to empower individuals and teams to freely
@@ -276,33 +219,28 @@ const SignIn = ({ signInWithGoogle, signInWithGithub }) => {
           </div>
         </div>
       </section>
-      <footer>
+      <footer className="bg-blue-500 text-white p-4">
         {/* Site footer */}
-        <footer className="site-footer">
-          <div className="container">
-            <div className="row">
-              <div className="row3">
-                <h6>Quick Links</h6>
-                <ul className="footer-links">
-                  <li>
-                    <a href="#">Guide</a>
-                  </li>
-                </ul>
-              </div>
-            </div>
-            <hr />
-          </div>
-          <div className="container">
-            <div className="row">
-              <div className="row4">
-                <p className="copyright-text">
-                  Copyright owners Lucas Bateson, Max T.Aarre, Nicklas F.H &amp;
-                  Ines T.© 2024 All Rights Reserved
-                </p>
-              </div>
+        <div className="flex justify-between">
+          <div>
+            <div>
+              <h6 className="font-semibold">Quick Links</h6>
+              <ul className="space-y-2">
+                <li>
+                  <a href="#">Guide</a>
+                </li>
+              </ul>
             </div>
           </div>
-        </footer>
+          <div>
+            <div>
+              <p>
+                Copyright owners Lucas Bateson, Max T.Aarre, Nicklas F.H &amp;
+                Ines T.© 2024 All Rights Reserved
+              </p>
+            </div>
+          </div>
+        </div>
       </footer>
     </div>
   );
