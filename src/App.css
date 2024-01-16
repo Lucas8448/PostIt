@@ -34,6 +34,7 @@ body {
   font-family: 'Open Sans', sans-serif;
   padding: 0;
   margin: 0;
+  overflow: hidden;
 }
 
 html {
@@ -799,14 +800,62 @@ h2 {
 }
 
 .ideas-container {
-  max-width: 100vw;
-  max-height: 60vh;
-  overflow: scroll;
+  position: relative;
+  left: 0;
+  top: 120px;
+  height: 70%;
+  width: 100%;
   display: flex;
   justify-content: flex-start;
   align-items: center;
   flex-direction: row;
   flex-wrap: wrap;
+  overflow: auto; 
+}
+
+@media (max-width: 843px) {
+  .ideas-container {
+    top: -60px;
+    border: 2px solid var(--bright-primary-color);
+    border-radius: 20px;
+    width: 600px;
+    height: 500px;
+  }
+}
+
+@media (max-width: 641px) {
+  .ideas-container {
+    width: 500px;
+    height: 500px;
+  }
+}
+
+@media (max-width: 641px) {
+  .ideas-container {
+    width: 500px;
+    height: 500px;
+  }
+}
+
+@media (max-width: 520px) {
+  .ideas-container {
+    width: 400px;
+    height: 500px;
+  }
+}
+
+@media (max-width: 418px) {
+  .ideas-container {
+    width: 300px;
+    height: 500px;
+  }
+}
+
+@media (max-width: 330px) {
+  .ideas-container {
+    width: 200px;
+    height: 500px;
+  }
 }
 
 .idea-box {
@@ -890,6 +939,15 @@ h2 {
   left: 50%;
   transform: translateX(-50%);
   padding-bottom: 70px;
+  background: var(--dark-tertiary);
+  opacity: 0.8;
+  padding: 20px;
+  border-top-left-radius: 20px;
+  border-top-right-radius: 20px;
+}
+
+.add-note-container:hover {
+  opacity: 1;
 }
 
 @media (max-width: 651px) {
