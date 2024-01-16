@@ -5,8 +5,8 @@ const PostIt = ({ id, content, submitter, submitterEmail }) => {
   return (
     <div className="post-it" id={`post-it-${id}`}>
       <p className="content">{content}</p>
-      {submitter && <p className="submitter">Submitted by: {submitter}</p>}
-      {submitterEmail && <p className="submitter-email">Email: {submitterEmail}</p>}
+      {submitter && <p className="submitter">{submitter}</p>}
+      {submitterEmail && <p className="submitter-email">{submitterEmail}</p>}
     </div>
   );
 };
