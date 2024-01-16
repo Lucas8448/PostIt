@@ -862,6 +862,12 @@ h2 {
   outline: none;
 }
 
+@media (max-width: 992px) {
+  .input-box {
+    width: 200px;
+  }
+}
+
 .input-box:focus {
   border-color: #000000;
 }
@@ -879,7 +885,34 @@ h2 {
 }
 
 .add-note-container {
+  position: fixed;
   bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  padding-bottom: 70px;
+}
+
+@media (max-width: 651px) {
+  .add-note-container {
+    padding-bottom: 20px;
+  }
+  .submit-idea {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 10px;
+    margin: 10px -10px;
+    transform: translateX(50%);
+  }
+}
+
+.background-container {
+  position: fixed;
+  bottom: 0;
+  background: var(--dark-tertiary);
+  width: 120%;
+  height: 20%;
+  transform: translateX(-50%);
 }
 
 .post-it {
