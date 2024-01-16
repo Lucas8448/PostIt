@@ -11,6 +11,7 @@ import { signInWithPopup } from "firebase/auth";
 import { Analytics } from '@vercel/analytics/react';
 import Host from './Host';
 import Client from './Client';
+import Manual from './Manual';
 import './App.css';
 import ThemeToggle from './components/ThemeToggle';
 
@@ -82,6 +83,13 @@ const App = () => {
                 submitter_email={user.email} 
               />} 
             />
+            <Route 
+              path="/manual" 
+              element={<Manual 
+                owner={user.displayName} 
+                owner_email={user.email} 
+              />} 
+            />
             <Route path="/" element={<Home user={user} />} />
           </>
         ) : (
@@ -139,6 +147,7 @@ const Home = ({ user }) => {
         <h5>Select one of the following to begin</h5>
         <Link to="/client" className="app-link-button2 app-home-link">Join<span className="material-symbols-outlined">dns</span></Link>
         <Link to="/host" className="app-link-button app-home-link">Host<span className="material-symbols-outlined">devices</span></Link>
+        <Link to="/manual" className="app-link-button3 app-home-link">Manual<span className="material-symbols-outlined">manual</span></Link>
         <div className="right">
           <div className="post-it">
             <p className="sticky taped">
