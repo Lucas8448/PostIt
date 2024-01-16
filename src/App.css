@@ -802,19 +802,7 @@ h2 {
   display: flex;
   justify-content: flex-start;
   align-items: center;
-  flex-direction: column;
-}
-
-.ideas {
-  position: absolute;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: flex-start;
-  align-items: center;
-  margin: 10px;
-  padding: 10px;
-  border-radius: 5px;
-  gap: 10px;
+  flex-direction: row;
 }
 
 .idea-box {
@@ -888,4 +876,29 @@ h2 {
 
 .add-note-container {
   bottom: 0;
+}
+
+.post-it {
+  background-color: #f9f9f9;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  max-height: 300px;
+  overflow-y: auto;
+  margin: 20px;
+  font-family: Arial, sans-serif;
+}
+
+.content,
+.submitter,
+.submitter-email {
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.submitter,
+.submitter-email {
+  font-size: 0.9em;
+  color: #666;
 }

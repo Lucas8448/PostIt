@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { database } from './firebaseConfig';
 import { ref, push, onValue, set } from 'firebase/database';
 import DigitInput from './components/DigitInput';
+import PostIt from './components/PostIt';
 
 const Client = ({ submitter, submitter_email }) => {
   const [sessionId, setSessionId] = useState('');
@@ -81,13 +82,13 @@ const Client = ({ submitter, submitter_email }) => {
           ) : (
             <>
               <div className="ideas-container">
-                <div className="ideas">
-                  {ideas.map((idea) => (
-                    <div key={idea.id} className="idea-box">
-                      {idea.content}
-                    </div>
-                  ))}
-                </div>
+                {ideas.map((idea) => (
+                  <PostIt
+                    key={idea.id}
+                    id={idea.id}
+                    content={idea.content}
+                  />
+                ))}
               </div>
               <div className="add-note-container">
                 <input
