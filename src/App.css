@@ -802,11 +802,11 @@ h2 {
 .ideas-container {
   position: relative;
   left: 0;
-  height: 70vh;
+  height: auto;
   width: 100%;
   display: flex;
   justify-content: flex-start;
-  align-items: center;
+  align-items: flex-start;
   flex-direction: row;
   flex-wrap: wrap;
   overflow: auto;
