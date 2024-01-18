@@ -11,7 +11,8 @@ import { signInWithPopup } from "firebase/auth";
 import { Analytics } from '@vercel/analytics/react';
 import Host from './Host';
 import Client from './Client';
-import Manual from './Manual';
+import DatabaseSchema from './resources/DatabaseSchemas';
+import Presentation from './resources/Presentation';
 import './App.css';
 
 const App = () => {
@@ -81,13 +82,8 @@ const App = () => {
                 submitter_email={user.email} 
               />} 
             />
-            <Route 
-              path="/manual" 
-              element={<Manual 
-                owner={user.displayName} 
-                owner_email={user.email} 
-              />} 
-            />
+            <Route path="/resources/database" element={<DatabaseSchema />}/>
+            <Route path="/resources/presentation" element={<Presentation />}/>
             <Route path="/" element={<Home user={user} />} />
           </>
         ) : (
