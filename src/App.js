@@ -197,8 +197,7 @@ const Home = ({ user }) => {
             <div className="row">
               <div className="row4">
                 <p className="copyright-text">
-                  Copyright owners Lucas Bateson, Max T.Aarre, Nicklas F.H &amp;
-                  Ines T.© 2024 All Rights Reserved
+                  Created by Lucas Bateson, Max T.Aarre, Nicklas F.Hagen &amp; Ines Touiti.
                 </p>
               </div>
             </div>
@@ -296,8 +295,7 @@ const SignIn = ({ signInWithGoogle, signInWithGithub }) => {
             <div className="row">
               <div className="row4">
                 <p className="copyright-text">
-                  Copyright owners Lucas Bateson, Max T.Aarre, Nicklas F.H &amp;
-                  Ines T.© 2024 All Rights Reserved
+                  Created by Lucas Bateson, Max T.Aarre, Nicklas F.Hagen &amp; Ines Touiti.
                 </p>
               </div>
             </div>
