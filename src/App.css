@@ -802,15 +802,17 @@ h2 {
 .ideas-container {
   position: relative;
   left: 0;
-  top: 120px;
-  height: 70%;
+  height: 70vh;
   width: 100%;
   display: flex;
   justify-content: flex-start;
   align-items: center;
   flex-direction: row;
   flex-wrap: wrap;
-  overflow: auto; 
+  overflow: auto;
+  box-sizing: border-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
 }
 
 @media (max-width: 843px) {
@@ -954,6 +956,7 @@ h2 {
   .add-note-container {
     padding-bottom: 20px;
   }
+
   .submit-idea {
     display: flex;
     align-items: center;
