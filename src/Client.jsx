@@ -75,7 +75,7 @@ const Client = ({ submitter, submitter_email }) => {
           {!sessionEntered ? (
             <>
               <DigitInput onDigitsChange={handleDigitsChange} digitCount={6} />
-              <button className="button" onClick={handleSessionSubmit}>
+              <button className="unstyled-button" onClick={handleSessionSubmit}>
                 Enter Session
               </button>
             </>
