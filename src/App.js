@@ -13,7 +13,6 @@ import Host from './Host';
 import Client from './Client';
 import DatabaseSchema from './resources/DatabaseSchemas';
 import Presentation from './resources/Presentation';
-
 import './App.css';
 
 const App = () => {
@@ -142,6 +141,7 @@ const Home = ({ user }) => {
         <h5>Select one of the following to begin</h5>
         <Link to="/client" className="app-link-button2 app-home-link">Join<span className="material-symbols-outlined">dns</span></Link>
         <Link to="/host" className="app-link-button app-home-link">Host<span className="material-symbols-outlined">devices</span></Link>
+        <Link to="/manual" className="app-link-button3 app-home-link">Manual<span className="material-symbols-outlined">manual</span></Link>
         <div className="right">
           <div className="post-it">
             <p className="sticky taped">
@@ -197,8 +197,7 @@ const Home = ({ user }) => {
             <div className="row">
               <div className="row4">
                 <p className="copyright-text">
-                  Copyright owners Lucas Bateson, Max T.Aarre, Nicklas F.H &amp;
-                  Ines T.© 2024 All Rights Reserved
+                  Created by Lucas Bateson, Max T.Aarre, Nicklas F.Hagen &amp; Ines Touiti.
                 </p>
               </div>
             </div>
@@ -296,8 +295,7 @@ const SignIn = ({ signInWithGoogle, signInWithGithub }) => {
             <div className="row">
               <div className="row4">
                 <p className="copyright-text">
-                  Copyright owners Lucas Bateson, Max T.Aarre, Nicklas F.H &amp;
-                  Ines T.© 2024 All Rights Reserved
+                  Created by Lucas Bateson, Max T.Aarre, Nicklas F.Hagen &amp; Ines Touiti.
                 </p>
               </div>
             </div>

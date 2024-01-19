@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { database } from './firebaseConfig';
 import { ref, onValue, set } from 'firebase/database';
-import PostIt from './components/PostIt';
 
 const generateSessionKey = () => {
   const characters = '0123456789';
@@ -65,17 +64,10 @@ const Host = ({ owner, owner_email }) => {
   return (
     <div className="container">
       <div className="container-box">
-        <h2>Host Panel</h2>
-        <p>Session ID: {sessionId}</p>
-        <div class="ideas-container">
-          {ideas.map((idea) => (
-              <PostIt
-                key={idea.id}
-                content={idea.content}
-                submitter={idea.submitter}
-                submitterEmail={idea.submitterEmail}
-              />
-          ))}
+        <h2>Manual</h2>
+        <p>Overtekst Yap</p>
+        <div>
+          <h3>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quae, quia eveniet! Laboriosam, sunt soluta quidem accusantium delectus repellat ea non doloremque odit expedita, officia, in dolor modi sed mollitia corrupti?</h3>
         </div>
       </div>
     </div>
